@@ -1,6 +1,7 @@
 export default function SignInPage() {
   const handleLogin = () => {
-    window.location.href = `/users/auth/google_oauth2`;
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000';
+    window.location.href = `${backendUrl}/users/auth/google_oauth2`;
   };
 
   return (

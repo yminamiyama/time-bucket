@@ -41,7 +41,7 @@ Validations:
 Business Rules:
 - start_age >= 20, end_age <= 100
 - granularityはユーザー選択値に一致
-- 重複検知: `(start_age, end_age)` が被る場合はDBユニーク制約
+- 重複検知: `(start_age, end_age)` が被る場合は、DBの排他制約（PostgreSQLの exclusion constraint）またはアプリケーションレベルのバリデーションで防ぐこと
 
 ## BucketItem
 - `id (UUID)`

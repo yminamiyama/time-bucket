@@ -61,7 +61,7 @@ Business Rules:
 - `created_at`, `updated_at`
 
 Constraints:
-- target_year は所属TimeBucketの `start_age/end_age` + birthyear で算出される範囲内
+- target_year は「ユーザーの生年（birthdateの年部分） + TimeBucketの start_age/end_age」で算出される範囲内
 - statusが`done`の場合、`completed_at`必須
 
 ## InsightPlaceholder

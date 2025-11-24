@@ -1,0 +1,35 @@
+# OS / Editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Ruby / Rails
+backend/log/*
+backend/tmp/*
+backend/tmp/pids/*
+backend/tmp/cache/*
+backend/tmp/sockets/*
+backend/.bundle/
+backend/vendor/
+backend/node_modules/
+backend/storage/*
+backend/public/assets/
+backend/.env
+backend/.env.local
+backend/.env.*.local
+backend/config/master.key
+backend/.coverage/
+
+# Root-level tools
+.env
+.env.local
+.env.*
+!.env.example
+coverage/
+
+# Docker / compose
+*.pid
+*.log
+Dockerfile.*

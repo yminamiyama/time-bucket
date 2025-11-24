@@ -143,8 +143,6 @@ TimeBucket
 BucketItem
 └── attributes: title, description, risk, cost, category, status, target_year
 
-yaml
-Copy code
 
 ---
 

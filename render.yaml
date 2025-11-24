@@ -1,0 +1,45 @@
+services:
+  # Backend API
+  - type: web
+    name: time-bucket-api
+    runtime: ruby
+    region: oregon
+    plan: free
+    buildCommand: "./bin/render-build.sh"
+    startCommand: "bundle exec puma -C config/puma.rb"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: time-bucket-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: time-bucket-redis
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: FRONTEND_URL
+        value: https://time-bucket.vercel.app
+      - key: RAILS_ENV
+        value: production
+      - key: RAILS_LOG_TO_STDOUT
+        value: enabled
+      - key: RAILS_SERVE_STATIC_FILES
+        value: enabled
+
+  # Redis
+  - type: redis
+    name: time-bucket-redis
+    region: oregon
+    plan: free
+    maxmemoryPolicy: allkeys-lru
+    ipAllowList: []
+
+databases:
+  # PostgreSQL
+  - name: time-bucket-db
+    region: oregon
+    plan: free
+    databaseName: time_bucket_production
+    user: time_bucket

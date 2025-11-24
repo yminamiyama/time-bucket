@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    command: bash -lc "bundle exec rails server -b 0.0.0.0 -p 4000"
+    ports:
+      - "4000:4000"
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/time_bucket_development
+      - REDIS_URL=redis://redis:6379/0
+      - RAILS_ENV=development
+      - FRONTEND_URL=http://localhost:3000
+      - POSTHOG_API_KEY=
+      - LOGTAIL_SOURCE_TOKEN=
+    volumes:
+      - ./backend:/app
+      - bundle_cache:/usr/local/bundle
+    depends_on:
+      - db
+      - redis
+      - localstack
+
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=time_bucket_development
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  localstack:
+    image: localstack/localstack:1.4
+    environment:
+      - SERVICES=s3
+      - DEFAULT_REGION=us-east-1
+    ports:
+      - "4566:4566"
+    volumes:
+      - localstack_data:/var/lib/localstack
+
+volumes:
+  postgres_data:
+  localstack_data:
+  bundle_cache:

@@ -32,7 +32,8 @@
 | Backend | Ruby 3.3 + Rails 8 (API) | ドメインモデリングが速い、個人でも生産性が高い |
 | Frontend | Next.js 15 (App Router) + TypeScript 5 + TailwindCSS + shadcn/ui | UI/UXを素早く構築し、Vercelにそのまま載せられる |
 | Dev Environment | Docker Compose (Rails + Next.js + Postgres + Redis) | OS依存なく環境を共有し、`docker compose up`だけで再現できる |
-| Auth | Devise + OmniAuth (Google SSO) | AWSに依存せず簡潔にSSOを実現 |
+| Production Infra | Render (Web Service + PostgreSQL + Redis) | 無料枠で本番運用可能、Infrastructure as Code (render.yaml) |
+| Auth | Devise + OmniAuth (Google SSO) | クラウドベンダー依存なく簡潔にSSOを実現 |
 | DB/Caching | Render Managed Postgres + Upstash Redis | 低コストでSSL/Durabilityを担保 |
 | Notifications | Resend (メール) + Slack Webhook | 個人用途に最適な価格とシンプルなAPI |
 | Observability | Logtail(Axiom) + PostHog + Vercel Analytics | SC-001〜004のメトリクスをすべて可視化可能 |

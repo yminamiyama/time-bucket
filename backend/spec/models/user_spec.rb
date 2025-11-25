@@ -39,23 +39,23 @@ RSpec.describe User, type: :model do
 
     context 'birthdate validation' do
       it 'is valid with birthdate 20 years ago' do
-        user = build(:user, birthdate: 20.years.ago.to_date)
+        user = build(:user, birthdate: Date.new(Date.today.year - 20, 12, 31))
         expect(user).to be_valid
       end
 
       it 'is valid with birthdate 100 years ago' do
-        user = build(:user, birthdate: 100.years.ago.to_date)
+        user = build(:user, birthdate: Date.new(Date.today.year - 100, 1, 1))
         expect(user).to be_valid
       end
 
       it 'is invalid with birthdate less than 20 years ago' do
-        user = build(:user, birthdate: 19.years.ago.to_date)
+        user = build(:user, birthdate: Date.new(Date.today.year - 19, 12, 31))
         expect(user).not_to be_valid
         expect(user.errors[:birthdate]).to be_present
       end
 
       it 'is invalid with birthdate more than 100 years ago' do
-        user = build(:user, birthdate: 101.years.ago.to_date)
+        user = build(:user, birthdate: Date.new(Date.today.year - 101, 1, 1))
         expect(user).not_to be_valid
         expect(user.errors[:birthdate]).to be_present
       end

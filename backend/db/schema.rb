@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_24_235625) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_25_142415) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -58,7 +58,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_24_235625) do
     t.integer "start_age", null: false
     t.datetime "updated_at", null: false
     t.uuid "user_id", null: false
-    t.index ["user_id", "position"], name: "index_time_buckets_on_user_id_and_position"
+    t.index ["user_id", "position"], name: "index_time_buckets_on_user_id_and_position", unique: true
     t.index ["user_id", "start_age", "end_age"], name: "index_time_buckets_on_user_id_and_start_age_and_end_age"
     t.index ["user_id"], name: "index_time_buckets_on_user_id"
   end

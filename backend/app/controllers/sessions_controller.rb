@@ -3,6 +3,13 @@ class SessionsController < ApplicationController
   def create
     auth = request.env['omniauth.auth']
     
+    # Validate OAuth data
+    unless auth.present? && auth['provider'].present? && auth['uid'].present? && auth.dig('info', 'email').present?
+      Rails.logger.error "Invalid OAuth data received: #{auth.inspect}"
+      redirect_to ENV.fetch('FRONTEND_URL', 'http://localhost:3000'), alert: 'Authentication failed. Invalid data received.'
+      return
+    end
+    
     user = User.find_or_create_by(provider: auth['provider'], uid: auth['uid']) do |u|
       u.email = auth['info']['email']
       u.birthdate = 20.years.ago.to_date  # Default value, user can update later

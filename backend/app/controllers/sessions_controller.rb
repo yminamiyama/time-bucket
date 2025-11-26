@@ -11,21 +11,27 @@ class SessionsController < ApplicationController
 
     if user.persisted?
       # Create new session
-      session = user.sessions.create!(
+      session = user.sessions.create(
         ip_address: request.remote_ip,
         user_agent: request.user_agent
       )
       
-      # Store session token in cookie
-      cookies.signed[:session_token] = {
-        value: session.token,
-        httponly: true,
-        secure: Rails.env.production?,
-        same_site: :lax
-      }
-      
-      redirect_to ENV.fetch('FRONTEND_URL', 'http://localhost:3000'), notice: 'Signed in successfully.'
+      if session.persisted?
+        # Store session token in cookie
+        cookies.signed[:session_token] = {
+          value: session.token,
+          httponly: true,
+          secure: Rails.env.production?,
+          same_site: :lax
+        }
+        
+        redirect_to ENV.fetch('FRONTEND_URL', 'http://localhost:3000'), notice: 'Signed in successfully.'
+      else
+        Rails.logger.error "Failed to create session for user #{user.id}: #{session.errors.full_messages.join(', ')}"
+        redirect_to ENV.fetch('FRONTEND_URL', 'http://localhost:3000'), alert: 'Authentication failed. Please try again.'
+      end
     else
+      Rails.logger.error "Failed to create user from OAuth: #{user.errors.full_messages.join(', ')}"
       redirect_to ENV.fetch('FRONTEND_URL', 'http://localhost:3000'), alert: 'Authentication failed.'
     end
   end

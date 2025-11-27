@@ -5,6 +5,21 @@ Rails.application.routes.draw do
   get '/auth/failure', to: 'sessions#failure'
   delete '/logout', to: 'sessions#destroy'
   
+  # API routes
+  namespace :api do
+    namespace :v1 do
+      resources :time_buckets, except: [:new, :edit] do
+        resources :bucket_items, only: [:index, :create], shallow: true
+      end
+      
+      resources :bucket_items, only: [:show, :update, :destroy] do
+        member do
+          patch :complete
+        end
+      end
+    end
+  end
+  
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

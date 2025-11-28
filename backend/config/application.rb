@@ -40,5 +40,8 @@ module App
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+    
+    # Enable cookies for API authentication (without session)
+    config.middleware.use ActionDispatch::Cookies
   end
 end

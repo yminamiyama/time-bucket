@@ -21,7 +21,7 @@ class TimeBucket < ApplicationRecord
   def end_age_greater_than_start_age
     return unless start_age && end_age
 
-    if end_age < start_age
+    if end_age <= start_age
       errors.add(:end_age, "must be greater than start_age")
     end
   end
@@ -31,7 +31,7 @@ class TimeBucket < ApplicationRecord
 
     overlapping = user.time_buckets
                       .where.not(id: id)
-                      .where('start_age < ? AND end_age > ?', end_age, start_age)
+                      .where('start_age <= ? AND end_age >= ?', end_age, start_age)
 
     if overlapping.exists?
       errors.add(:base, "Time bucket overlaps with existing bucket: #{overlapping.first.label}")

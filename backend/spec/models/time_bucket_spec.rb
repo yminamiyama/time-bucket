@@ -28,9 +28,10 @@ RSpec.describe TimeBucket, type: :model do
         expect(bucket.errors[:end_age]).to include('must be greater than start_age')
       end
 
-      it 'is valid when end_age equals start_age' do
+      it 'is invalid when end_age equals start_age' do
         bucket = build(:time_bucket, start_age: 100, end_age: 100)
-        expect(bucket).to be_valid
+        expect(bucket).not_to be_valid
+        expect(bucket.errors[:end_age]).to include('must be greater than start_age')
       end
 
       it 'is valid when end_age is greater than start_age' do

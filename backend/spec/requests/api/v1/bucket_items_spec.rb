@@ -217,13 +217,4 @@ RSpec.describe "Api::V1::BucketItems", type: :request do
       end
     end
   end
-  
-  private
-  
-  def auth_headers(session)
-    # Generate signed cookie value using Rails message verifier
-    signed_token = Rails.application.message_verifier("signed cookie").generate(session.token)
-    
-    { 'Cookie' => "session_token=#{CGI.escape(signed_token)}" }
-  end
 end

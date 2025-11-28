@@ -8,6 +8,9 @@ Rails.application.routes.draw do
   # API routes
   namespace :api do
     namespace :v1 do
+      # Template generation
+      post 'time_buckets/templates', to: 'time_bucket_templates#create'
+      
       resources :time_buckets, except: [:new, :edit] do
         resources :bucket_items, except: [:new, :edit], shallow: true do
           patch :complete, on: :member

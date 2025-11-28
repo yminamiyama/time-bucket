@@ -21,7 +21,7 @@ class TimeBucket < ApplicationRecord
   def end_age_greater_than_start_age
     return unless start_age && end_age
 
-    if end_age <= start_age
+    if end_age < start_age
       errors.add(:end_age, "must be greater than start_age")
     end
   end

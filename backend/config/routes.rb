@@ -9,12 +9,8 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :time_buckets, except: [:new, :edit] do
-        resources :bucket_items, only: [:index, :create], shallow: true
-      end
-      
-      resources :bucket_items, only: [:show, :update, :destroy] do
-        member do
-          patch :complete
+        resources :bucket_items, except: [:new, :edit], shallow: true do
+          patch :complete, on: :member
         end
       end
     end

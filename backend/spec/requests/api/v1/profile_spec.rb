@@ -39,7 +39,11 @@ RSpec.describe "Api::V1::Profile", type: :request do
         body = JSON.parse(response.body)
         
         expect(body["birthdate"]).to eq("1985-03-20")
-        expect(body["current_age"]).to eq(Date.today.year - 1985)
+        
+        # Calculate expected age correctly (account for birthday not yet occurred this year)
+        expected_age = Date.today.year - 1985
+        expected_age -= 1 if Date.today < Date.new(Date.today.year, 3, 20)
+        expect(body["current_age"]).to eq(expected_age)
         
         user.reload
         expect(user.birthdate).to eq(new_birthdate)

@@ -17,6 +17,56 @@ module Api
         }
       end
 
+      # GET /api/v1/dashboard/actions-now
+      def actions_now
+        unless current_user.birthdate
+          render json: { error: "Birthdate is required to calculate actions now" }, status: :bad_request
+          return
+        end
+
+        current_age = current_user.current_age
+        current_year = Date.today.year
+        threshold_years = 5
+
+        items = BucketItem.joins(:time_bucket)
+                          .where(time_buckets: { user_id: current_user.id })
+                          .where.not(status: :done)
+                          .select("bucket_items.*, time_buckets.label as bucket_label")
+
+        actions = items.filter_map do |item|
+          next unless item.target_year
+
+          year_diff = item.target_year - current_year
+          reason = if year_diff < 0
+            "overdue"
+          elsif year_diff.abs <= threshold_years
+            "approaching"
+          end
+
+          next unless reason
+
+          {
+            id: item.id,
+            title: item.title,
+            category: item.category,
+            difficulty: item.difficulty,
+            risk_level: item.risk_level,
+            target_year: item.target_year,
+            bucket_label: item.bucket_label,
+            status: item.status,
+            reason: reason,
+            years_until: year_diff
+          }
+        end
+
+        render json: {
+          current_age: current_age,
+          current_year: current_year,
+          threshold_years: threshold_years,
+          items: actions.sort_by { |a| a[:years_until] }
+        }
+      end
+
       private
 
       def calculate_bucket_density

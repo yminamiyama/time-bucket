@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       # Dashboard
       get 'dashboard/summary', to: 'dashboard#summary'
+      get 'dashboard/actions-now', to: 'dashboard#actions_now'
       
       # Template generation
       post 'time_buckets/templates', to: 'time_bucket_templates#create'

@@ -12,6 +12,10 @@ Rails.application.routes.draw do
       get 'dashboard/summary', to: 'dashboard#summary'
       get 'dashboard/actions-now', to: 'dashboard#actions_now'
       
+      # Profile
+      get 'profile', to: 'profile#show'
+      patch 'profile', to: 'profile#update'
+      
       # Template generation
       post 'time_buckets/templates', to: 'time_bucket_templates#create'
       

@@ -30,7 +30,7 @@ module Api
 
         items = BucketItem.joins(:time_bucket)
                           .where(time_buckets: { user_id: current_user.id })
-                          .where.not(status: :done)
+                          .where.not(status: 'done')
                           .select("bucket_items.*, time_buckets.label as bucket_label")
 
         actions = items.filter_map do |item|

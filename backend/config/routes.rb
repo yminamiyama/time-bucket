@@ -17,6 +17,10 @@ Rails.application.routes.draw do
       get 'profile', to: 'profile#show'
       patch 'profile', to: 'profile#update'
       
+      # Notification Settings
+      get 'notification-settings', to: 'notification_settings#show'
+      patch 'notification-settings', to: 'notification_settings#update'
+      
       # Template generation
       post 'time_buckets/templates', to: 'time_bucket_templates#create'
       

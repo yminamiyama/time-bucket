@@ -26,10 +26,13 @@ RSpec.describe BucketItem, type: :model do
       let(:user) { create(:user, birthdate: Date.new(1990, 1, 1)) }
       let(:time_bucket) { create(:time_bucket, user: user, start_age: 30, end_age: 39) }
 
-      it 'is valid when target_year is within bucket range' do
+      it 'is valid when target_year is at bucket range boundaries' do
         # User born 1990, age 30-39 = years 2020-2029
-        item = build(:bucket_item, time_bucket: time_bucket, target_year: 2020)
-        expect(item).to be_valid
+        start_item = build(:bucket_item, time_bucket: time_bucket, target_year: 2020)
+        end_item = build(:bucket_item, time_bucket: time_bucket, target_year: 2029)
+        
+        expect(start_item).to be_valid
+        expect(end_item).to be_valid
       end
 
       it 'is invalid when target_year is before bucket range' do
@@ -42,16 +45,6 @@ RSpec.describe BucketItem, type: :model do
         item = build(:bucket_item, time_bucket: time_bucket, target_year: 2030)
         expect(item).not_to be_valid
         expect(item.errors[:target_year]).to include('must be between 2020 and 2029 (age 30-39) for this bucket')
-      end
-
-      it 'is valid at the exact start year of bucket range' do
-        item = build(:bucket_item, time_bucket: time_bucket, target_year: 2020)
-        expect(item).to be_valid
-      end
-
-      it 'is valid at the exact end year of bucket range' do
-        item = build(:bucket_item, time_bucket: time_bucket, target_year: 2029)
-        expect(item).to be_valid
       end
 
       it 'is invalid when user has no birth_year' do

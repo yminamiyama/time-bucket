@@ -5,6 +5,9 @@ Thumbs.db
 .idea/
 .vscode/
 
+# Docs
+docs/implementation-checklist.md
+
 # Ruby / Rails
 backend/log/*
 backend/tmp/*

@@ -26,7 +26,7 @@ module Api
             start_age: bucket.start_age,
             end_age: bucket.end_age,
             item_count: bucket.bucket_items.count,
-            total_cost: bucket.bucket_items.sum(:cost_estimate) || 0
+            total_cost: bucket.bucket_items.sum(:cost_estimate)
           }
         end
       end

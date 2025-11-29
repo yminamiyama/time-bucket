@@ -39,6 +39,11 @@ FactoryBot.define do
       title { 'Get promoted to senior level' }
     end
 
+    trait :family do
+      category { 'family' }
+      title { 'Spend quality time with family' }
+    end
+
     trait :high_risk do
       risk_level { 'high' }
     end

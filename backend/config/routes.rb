@@ -8,6 +8,9 @@ Rails.application.routes.draw do
   # API routes
   namespace :api do
     namespace :v1 do
+      # Dashboard
+      get 'dashboard/summary', to: 'dashboard#summary'
+      
       # Template generation
       post 'time_buckets/templates', to: 'time_bucket_templates#create'
       

@@ -76,13 +76,17 @@ module Api
         total_cost = completed_items.sum(:cost_estimate)
         total_items = completed_items.count
 
+        # Precompute category counts to avoid N+1 queries
+        all_items_by_category = BucketItem.joins(:time_bucket)
+                                          .where(time_buckets: { user_id: current_user.id })
+                                          .group(:category)
+                                          .count
+        completed_by_category = completed_items.group(:category).count
+
         # Category-wise achievement rates
         category_achievements = BucketItem::CATEGORIES.map do |category|
-          total_in_category = BucketItem.joins(:time_bucket)
-                                        .where(time_buckets: { user_id: current_user.id })
-                                        .where(category: category)
-                                        .count
-          completed_in_category = completed_items.where(category: category).count
+          total_in_category = all_items_by_category[category] || 0
+          completed_in_category = completed_by_category[category] || 0
 
           {
             category: category,

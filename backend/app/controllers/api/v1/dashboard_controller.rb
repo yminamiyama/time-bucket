@@ -47,9 +47,11 @@ module Api
 
       def calculate_completion_stats(items)
         total = items.count
-        completed = items.count { |item| item.status == 'done' }
-        in_progress = items.count { |item| item.status == 'in_progress' }
-        planned = items.count { |item| item.status == 'planned' }
+        status_counts = items.group_by(&:status).transform_values(&:count)
+        
+        completed = status_counts['done'] || 0
+        in_progress = status_counts['in_progress'] || 0
+        planned = status_counts['planned'] || 0
 
         {
           total: total,

@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       # Dashboard
       get 'dashboard/summary', to: 'dashboard#summary'
       get 'dashboard/actions-now', to: 'dashboard#actions_now'
+      get 'dashboard/review-completed', to: 'dashboard#review_completed'
       
       # Profile
       get 'profile', to: 'profile#show'

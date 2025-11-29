@@ -120,7 +120,7 @@ RSpec.describe "Api::V1::Dashboard Actions Now", type: :request do
         create(:bucket_item, 
                time_bucket: other_bucket, 
                title: "Other user task",
-               target_year: 2021,  # Within other_user's bucket range (1985 + 35 = 2020 to 2029)
+               target_year: [Date.today.year - 4, 2020].max,  # Overdue, within bucket range (1985 + 35 = 2020 to 2029)
                status: :planned)
       end
 
@@ -129,7 +129,7 @@ RSpec.describe "Api::V1::Dashboard Actions Now", type: :request do
         create(:bucket_item, 
                time_bucket: my_bucket, 
                title: "My task",
-               target_year: 2022,  # Within user's bucket range (1990 + 30 = 2020 to 2029)
+               target_year: [Date.today.year - 3, 2020].max,  # Overdue, within bucket range (1990 + 30 = 2020 to 2029)
                status: :planned)
       end
 

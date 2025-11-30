@@ -112,7 +112,7 @@ paths:
                   minimum: 1
                   maximum: 5
                   example: 2
-                estimated_cost:
+                cost_estimate:
                   type: integer
                   example: 50000
                 target_year:
@@ -217,7 +217,7 @@ paths:
                   type: integer
                   minimum: 1
                   maximum: 5
-                estimated_cost:
+                cost_estimate:
                   type: integer
                 target_year:
                   type: integer
@@ -947,7 +947,7 @@ components:
           - low
           - medium
           - high
-        estimated_cost:
+        cost_estimate:
           type: number
           nullable: true
         target_year:

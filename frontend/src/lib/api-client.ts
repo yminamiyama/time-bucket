@@ -19,7 +19,6 @@ type ApiBucketItem = {
   target_year: number;
   value_statement: string;
   completed_at?: string | null;
-  completed_at?: string;
   created_at?: string;
   updated_at?: string;
 };

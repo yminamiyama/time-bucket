@@ -32,7 +32,7 @@ export default function BucketListPage() {
         : ItemStatus.PLANNED;
 
     const completedAt =
-      nextStatus === ItemStatus.DONE ? new Date().toISOString() : null;
+      nextStatus === ItemStatus.DONE ? new Date().toISOString() : undefined;
 
     updateItem(item.timeBucketId, item.id, { status: nextStatus, completedAt });
   };

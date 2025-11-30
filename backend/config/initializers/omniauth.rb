@@ -12,5 +12,6 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   end
 end
 
-# Configure OmniAuth to use POST for security
-OmniAuth.config.allowed_request_methods = [:post]
+# Allow GET requests in development for easier testing
+# In production, consider using POST only for security
+OmniAuth.config.allowed_request_methods = [:get, :post]

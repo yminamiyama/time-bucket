@@ -41,7 +41,8 @@ module App
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
     
-    # Enable cookies for API authentication (without session)
+    # Enable cookies and session for OAuth authentication
     config.middleware.use ActionDispatch::Cookies
+    config.middleware.use ActionDispatch::Session::CookieStore
   end
 end

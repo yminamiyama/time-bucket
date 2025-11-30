@@ -45,10 +45,14 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
-      - name: Set Vercel Environment Variables
+      - name: Inject GitHub Secrets into local env file
         run: |
-          vercel env rm DEBUG_MESSAGE production --yes --token=${{ secrets.VERCEL_TOKEN }} || true
-          echo "${{ secrets.PROD_DEBUG_MESSAGE }}" | vercel env add DEBUG_MESSAGE production --token=${{ secrets.VERCEL_TOKEN }}
+          {
+            echo "NEXT_PUBLIC_BACKEND_URL=${{ secrets.NEXT_PUBLIC_BACKEND_URL }}";
+            echo "NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}";
+            echo "NEXT_PUBLIC_USE_MOCK=${{ secrets.NEXT_PUBLIC_USE_MOCK }}";
+            echo "DEBUG_MESSAGE=${{ secrets.PROD_DEBUG_MESSAGE }}";
+          } >> .vercel/.env.production.local
         working-directory: frontend
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}

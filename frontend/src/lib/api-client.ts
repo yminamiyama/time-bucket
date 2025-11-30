@@ -1,7 +1,10 @@
 import { getInitialData } from "@/services/mockDataService";
 import { BucketItem, TimeBucket, UserProfile, Difficulty, RiskLevel, ItemStatus } from "@/types";
 
-export const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "false" ? false : true;
+// Use mock when explicitly enabled, or when not specified in non-production
+export const USE_MOCK =
+  process.env.NEXT_PUBLIC_USE_MOCK === "true" ||
+  (!process.env.NEXT_PUBLIC_USE_MOCK && process.env.NODE_ENV !== "production");
 
 // API_BASE_URL is the API prefix (default /api/v1). BACKEND_BASE_URL is the origin for auth redirects.
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "/api/v1";

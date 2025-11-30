@@ -12,6 +12,8 @@ export default function DashboardPage() {
   const { buckets, isLoading: bucketsLoading } = useBuckets();
   const { user, isLoading: userLoading } = useUser();
 
+  const formatYen = (amount: number) => `¥${amount.toLocaleString()}`;
+
   const densityData = useMemo(() => {
     return buckets.map((b) => ({
       name: b.label,
@@ -44,7 +46,9 @@ export default function DashboardPage() {
     return <div>Loading...</div>;
   }
 
-  const totalCost = buckets.flatMap((b) => b.items).reduce((acc, i) => acc + i.costEstimate, 0);
+  const totalCost = buckets
+    .flatMap((b) => b.items)
+    .reduce((acc, i) => acc + (typeof i.costEstimate === "number" ? i.costEstimate : 0), 0);
   const totalItems = buckets.flatMap((b) => b.items).length;
   const completedItems = buckets.flatMap((b) => b.items).filter((i) => i.status === ItemStatus.DONE).length;
   const completionRate = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
@@ -87,7 +91,7 @@ export default function DashboardPage() {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground font-medium">生涯概算コスト</p>
-                <p className="text-2xl font-bold">¥{totalCost.toLocaleString()}k</p>
+                <p className="text-2xl font-bold">{formatYen(totalCost)}</p>
               </div>
             </div>
             <p className="text-xs text-muted-foreground mt-4">全バケットアイテムの総見積もりコスト。</p>

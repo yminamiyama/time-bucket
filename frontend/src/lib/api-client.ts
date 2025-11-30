@@ -14,7 +14,7 @@ type ApiBucketItem = {
   category: string;
   difficulty: BucketItem["difficulty"];
   risk_level: BucketItem["riskLevel"];
-  estimated_cost: number;
+  cost_estimate: number | null;
   status: BucketItem["status"];
   target_year: number;
   value_statement: string;
@@ -89,7 +89,7 @@ const mapBucketItem = (apiItem: ApiBucketItem): BucketItem => ({
   category: mapCategoryFromApi(apiItem.category),
   difficulty: apiItem.difficulty,
   riskLevel: apiItem.risk_level,
-  costEstimate: apiItem.estimated_cost,
+  costEstimate: apiItem.cost_estimate ?? 0,
   status: apiItem.status,
   targetYear: apiItem.target_year,
   valueStatement: apiItem.value_statement,
@@ -181,7 +181,7 @@ const RealApiClient = {
         category: mapCategoryToApi(body.category),
         difficulty: body.difficulty,
         risk_level: body.riskLevel,
-        estimated_cost: body.costEstimate,
+        cost_estimate: body.costEstimate,
         status: body.status,
         target_year: body.targetYear,
         value_statement: body.valueStatement,
@@ -211,7 +211,7 @@ const RealApiClient = {
       if (body.category) apiBody.category = mapCategoryToApi(body.category);
       if (body.difficulty) apiBody.difficulty = body.difficulty;
       if (body.riskLevel) apiBody.risk_level = body.riskLevel;
-      if (body.costEstimate !== undefined) apiBody.estimated_cost = body.costEstimate;
+      if (body.costEstimate !== undefined) apiBody.cost_estimate = body.costEstimate;
       if (body.targetYear) apiBody.target_year = body.targetYear;
       if (body.valueStatement) apiBody.value_statement = body.valueStatement;
 

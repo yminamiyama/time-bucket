@@ -146,7 +146,7 @@ export function CreateItemDialog({ open, onOpenChange, onSubmit, defaultTargetYe
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
-              <label className="text-sm font-medium">概算予算 (千円)</label>
+              <label className="text-sm font-medium">概算予算 (円)</label>
               <div className="relative">
                 <span className="absolute left-3 top-2.5 text-muted-foreground text-xs">¥</span>
                 <input

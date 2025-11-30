@@ -17,6 +17,8 @@ export default function BucketListPage() {
   const [selectedBucketId, setSelectedBucketId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
+  const formatYen = (amount: number) => `¥${amount.toLocaleString()}`;
+
   const effectiveBucketId = selectedBucketId ?? buckets[0]?.id ?? null;
   const selectedBucket = buckets.find((b) => b.id === effectiveBucketId);
 
@@ -158,7 +160,7 @@ export default function BucketListPage() {
                             </span>
                             <span className="flex items-center gap-1">
                               <DollarSign size={12} />
-                              ¥{item.costEstimate}k
+                              {formatYen(item.costEstimate)}
                             </span>
                             <span className={cn("flex items-center gap-1", RISK_CONFIG[item.riskLevel].color)}>
                               <span className="w-1.5 h-1.5 rounded-full bg-current"></span>

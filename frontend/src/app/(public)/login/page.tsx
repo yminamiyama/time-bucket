@@ -4,11 +4,8 @@ import { BACKEND_BASE_URL, API_BASE_URL } from "@/lib/api-client";
 import { ShieldCheck, LogIn } from "lucide-react";
 
 export default function LoginPage() {
-  const handleSignIn = () => {
-    // 認証エンドポイントは /auth/google_oauth2 (API prefixなし)
-    const base = BACKEND_BASE_URL || API_BASE_URL.replace(/\/api\/v1$/, "");
-    window.location.href = `${base}/auth/google_oauth2`;
-  };
+  // 認証エンドポイントは /auth/google_oauth2 (API prefixなし)
+  const action = `${(BACKEND_BASE_URL || API_BASE_URL.replace(/\/api\/v1$/, ""))}/auth/google_oauth2`;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
@@ -23,13 +20,15 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <button
-          onClick={handleSignIn}
-          className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground py-3 rounded-xl font-semibold hover:bg-primary/90 transition-colors shadow-sm"
-        >
-          <LogIn size={18} />
-          Sign in with Google
-        </button>
+        <form action={action} method="post" className="w-full">
+          <button
+            type="submit"
+            className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground py-3 rounded-xl font-semibold hover:bg-primary/90 transition-colors shadow-sm"
+          >
+            <LogIn size={18} />
+            Sign in with Google
+          </button>
+        </form>
 
         <p className="text-xs text-muted-foreground text-center">
           サインインすると、バックエンドの認証エンドポイントへリダイレクトします。

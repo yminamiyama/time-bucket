@@ -6,14 +6,18 @@ RSpec.describe 'api/v1/profile', type: :request do
       tags 'Profile'
       description 'Retrieves the authenticated user profile information'
       produces 'application/json'
-      security [{ cookie_auth: [] }]
+      parameter name: :Cookie, in: :header, type: :string, required: false, description: 'Session cookie'
 
       response(200, 'successful') do
         schema '$ref' => '#/components/schemas/User'
         
         let(:user) { create(:user) }
-        
-        before { sign_in(user) }
+        let(:user_session) { create(:session, user: user) }
+        let(:Cookie) do
+          jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
+          jar.signed[:session_token] = user_session.token
+          jar.instance_variable_get(:@set_cookies).transform_values { |v| v[:value] }.map { |k, v| "#{k}=#{v}" }.join('; ')
+        end
         
         run_test! do |response|
           data = JSON.parse(response.body)
@@ -37,7 +41,7 @@ RSpec.describe 'api/v1/profile', type: :request do
       description 'Updates the authenticated user profile information'
       consumes 'application/json'
       produces 'application/json'
-      security [{ cookie_auth: [] }]
+      parameter name: :Cookie, in: :header, type: :string, required: false, description: 'Session cookie'
       
       parameter name: :profile, in: :body, schema: {
         type: :object,
@@ -53,7 +57,12 @@ RSpec.describe 'api/v1/profile', type: :request do
         let(:user) { create(:user, birthdate: '2000-01-01') }
         let(:profile) { { birthdate: '1995-06-15' } }
         
-        before { sign_in(user) }
+        let(:user_session) { create(:session, user: user) }
+        let(:Cookie) do
+          jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
+          jar.signed[:session_token] = user_session.token
+          jar.instance_variable_get(:@set_cookies).transform_values { |v| v[:value] }.map { |k, v| "#{k}=#{v}" }.join('; ')
+        end
         
         run_test! do |response|
           data = JSON.parse(response.body)
@@ -67,7 +76,12 @@ RSpec.describe 'api/v1/profile', type: :request do
         let(:user) { create(:user) }
         let(:profile) { { birthdate: '2030-01-01' } }  # Future date
         
-        before { sign_in(user) }
+        let(:user_session) { create(:session, user: user) }
+        let(:Cookie) do
+          jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
+          jar.signed[:session_token] = user_session.token
+          jar.instance_variable_get(:@set_cookies).transform_values { |v| v[:value] }.map { |k, v| "#{k}=#{v}" }.join('; ')
+        end
         
         run_test!
       end

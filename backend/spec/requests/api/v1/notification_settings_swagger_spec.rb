@@ -6,14 +6,24 @@ RSpec.describe 'api/v1/notification_settings', type: :request do
       tags 'Notification Settings'
       description 'Retrieves the authenticated user notification preferences'
       produces 'application/json'
-      security [{ cookie_auth: [] }]
+      parameter name: :Cookie, in: :header, type: :string, required: false, description: 'Session cookie'
 
       response(200, 'successful') do
         schema '$ref' => '#/components/schemas/NotificationPreference'
         
         let(:user) { create(:user) }
         
-        before { sign_in(user) }
+        let(:user_session) { create(:session, user: user) }
+        
+        let(:Cookie) do
+        
+          jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
+        
+          jar.signed[:session_token] = user_session.token
+        
+          jar.instance_variable_get(:@set_cookies).transform_values { |v| v[:value] }.map { |k, v| "#{k}=#{v}" }.join('; ')
+        
+        end
         
         run_test! do |response|
           data = JSON.parse(response.body)
@@ -36,7 +46,7 @@ RSpec.describe 'api/v1/notification_settings', type: :request do
       description 'Updates the authenticated user notification preferences'
       consumes 'application/json'
       produces 'application/json'
-      security [{ cookie_auth: [] }]
+      parameter name: :Cookie, in: :header, type: :string, required: false, description: 'Session cookie'
       
       parameter name: :notification_settings, in: :body, schema: {
         type: :object,
@@ -61,7 +71,17 @@ RSpec.describe 'api/v1/notification_settings', type: :request do
         let(:user) { create(:user) }
         let(:notification_settings) { { email_enabled: false } }
         
-        before { sign_in(user) }
+        let(:user_session) { create(:session, user: user) }
+        
+        let(:Cookie) do
+        
+          jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
+        
+          jar.signed[:session_token] = user_session.token
+        
+          jar.instance_variable_get(:@set_cookies).transform_values { |v| v[:value] }.map { |k, v| "#{k}=#{v}" }.join('; ')
+        
+        end
         
         run_test! do |response|
           data = JSON.parse(response.body)
@@ -75,7 +95,17 @@ RSpec.describe 'api/v1/notification_settings', type: :request do
         let(:user) { create(:user) }
         let(:notification_settings) { { digest_time: 'invalid' } }  # Invalid time format
         
-        before { sign_in(user) }
+        let(:user_session) { create(:session, user: user) }
+        
+        let(:Cookie) do
+        
+          jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
+        
+          jar.signed[:session_token] = user_session.token
+        
+          jar.instance_variable_get(:@set_cookies).transform_values { |v| v[:value] }.map { |k, v| "#{k}=#{v}" }.join('; ')
+        
+        end
         
         run_test!
       end

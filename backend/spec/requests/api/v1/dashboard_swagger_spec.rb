@@ -6,7 +6,7 @@ RSpec.describe 'api/v1/dashboard', type: :request do
       tags 'Dashboard'
       description 'Retrieves dashboard summary statistics including bucket counts and item progress'
       produces 'application/json'
-      security [{ cookie_auth: [] }]
+      parameter name: :Cookie, in: :header, type: :string, required: false, description: 'Session cookie'
 
       response(200, 'successful') do
         schema type: :object,
@@ -21,11 +21,24 @@ RSpec.describe 'api/v1/dashboard', type: :request do
         
         let(:user) { create(:user) }
         
+        let(:user_session) { create(:session, user: user) }
+        
+        let(:Cookie) do
+        
+          jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
+        
+          jar.signed[:session_token] = user_session.token
+        
+          jar.instance_variable_get(:@set_cookies).transform_values { |v| v[:value] }.map { |k, v| "#{k}=#{v}" }.join('; ')
+        
+        end
+
+        
         before do
-          sign_in(user)
           bucket = create(:time_bucket, user: user)
           create(:bucket_item, time_bucket: bucket, status: 'active')
           create(:bucket_item, time_bucket: bucket, status: 'completed')
+        
         end
         
         run_test! do |response|
@@ -50,7 +63,7 @@ RSpec.describe 'api/v1/dashboard', type: :request do
       tags 'Dashboard'
       description 'Retrieves bucket items that should be actioned now based on user current age'
       produces 'application/json'
-      security [{ cookie_auth: [] }]
+      parameter name: :Cookie, in: :header, type: :string, required: false, description: 'Session cookie'
 
       response(200, 'successful') do
         schema type: :array,
@@ -58,10 +71,23 @@ RSpec.describe 'api/v1/dashboard', type: :request do
         
         let(:user) { create(:user, birthdate: 30.years.ago) }
         
+        let(:user_session) { create(:session, user: user) }
+        
+        let(:Cookie) do
+        
+          jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
+        
+          jar.signed[:session_token] = user_session.token
+        
+          jar.instance_variable_get(:@set_cookies).transform_values { |v| v[:value] }.map { |k, v| "#{k}=#{v}" }.join('; ')
+        
+        end
+
+        
         before do
-          sign_in(user)
           bucket = create(:time_bucket, user: user, start_age: 25, end_age: 35)
           create_list(:bucket_item, 3, time_bucket: bucket, status: 'active')
+        
         end
         
         run_test! do |response|
@@ -84,7 +110,7 @@ RSpec.describe 'api/v1/dashboard', type: :request do
       tags 'Dashboard'
       description 'Retrieves recently completed bucket items for review'
       produces 'application/json'
-      security [{ cookie_auth: [] }]
+      parameter name: :Cookie, in: :header, type: :string, required: false, description: 'Session cookie'
 
       response(200, 'successful') do
         schema type: :array,
@@ -92,10 +118,23 @@ RSpec.describe 'api/v1/dashboard', type: :request do
         
         let(:user) { create(:user) }
         
+        let(:user_session) { create(:session, user: user) }
+        
+        let(:Cookie) do
+        
+          jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
+        
+          jar.signed[:session_token] = user_session.token
+        
+          jar.instance_variable_get(:@set_cookies).transform_values { |v| v[:value] }.map { |k, v| "#{k}=#{v}" }.join('; ')
+        
+        end
+
+        
         before do
-          sign_in(user)
           bucket = create(:time_bucket, user: user)
           create_list(:bucket_item, 5, time_bucket: bucket, status: 'completed', completed_at: 1.day.ago)
+        
         end
         
         run_test! do |response|

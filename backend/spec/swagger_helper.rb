@@ -43,14 +43,6 @@ RSpec.configure do |config|
         }
       ],
       components: {
-        securitySchemes: {
-          cookie_auth: {
-            type: 'apiKey',
-            in: 'cookie',
-            name: 'session_token',
-            description: 'Session cookie obtained after Google OAuth authentication'
-          }
-        },
         schemas: {
           User: {
             type: 'object',

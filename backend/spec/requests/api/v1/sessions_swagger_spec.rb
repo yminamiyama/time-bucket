@@ -94,7 +94,7 @@ RSpec.describe 'api/v1/sessions', type: :request do
     delete('Logout') do
       tags 'Authentication'
       description 'Logs out the current user by destroying their session'
-      security [{ cookie_auth: [] }]
+      parameter name: :Cookie, in: :header, type: :string, required: false, description: 'Session cookie'
 
       response(200, 'logged out successfully') do
         schema type: :object,
@@ -105,7 +105,17 @@ RSpec.describe 'api/v1/sessions', type: :request do
         
         let(:user) { create(:user) }
         
-        before { sign_in(user) }
+        let(:user_session) { create(:session, user: user) }
+        
+        let(:Cookie) do
+        
+          jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
+        
+          jar.signed[:session_token] = user_session.token
+        
+          jar.instance_variable_get(:@set_cookies).transform_values { |v| v[:value] }.map { |k, v| "#{k}=#{v}" }.join('; ')
+        
+        end
         
         run_test! do |response|
           data = JSON.parse(response.body)

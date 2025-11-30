@@ -8,7 +8,7 @@ RSpec.describe 'api/v1/time_buckets/{time_bucket_id}/bucket_items', type: :reque
       tags 'Bucket Items'
       description 'Retrieves all bucket items for a specific time bucket'
       produces 'application/json'
-      security [{ cookie_auth: [] }]
+      parameter name: :Cookie, in: :header, type: :string, required: false, description: 'Session cookie'
 
       response(200, 'successful') do
         schema type: :array,
@@ -18,9 +18,22 @@ RSpec.describe 'api/v1/time_buckets/{time_bucket_id}/bucket_items', type: :reque
         let(:bucket) { create(:time_bucket, user: user) }
         let(:time_bucket_id) { bucket.id }
         
+        let(:user_session) { create(:session, user: user) }
+        
+        let(:Cookie) do
+        
+          jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
+        
+          jar.signed[:session_token] = user_session.token
+        
+          jar.instance_variable_get(:@set_cookies).transform_values { |v| v[:value] }.map { |k, v| "#{k}=#{v}" }.join('; ')
+        
+        end
+
+        
         before do
-          sign_in(user)
           create_list(:bucket_item, 3, time_bucket: bucket)
+        
         end
         
         run_test! do |response|
@@ -36,7 +49,17 @@ RSpec.describe 'api/v1/time_buckets/{time_bucket_id}/bucket_items', type: :reque
         let(:user) { create(:user) }
         let(:time_bucket_id) { 99999 }
         
-        before { sign_in(user) }
+        let(:user_session) { create(:session, user: user) }
+        
+        let(:Cookie) do
+        
+          jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
+        
+          jar.signed[:session_token] = user_session.token
+        
+          jar.instance_variable_get(:@set_cookies).transform_values { |v| v[:value] }.map { |k, v| "#{k}=#{v}" }.join('; ')
+        
+        end
         
         run_test!
       end
@@ -56,7 +79,7 @@ RSpec.describe 'api/v1/time_buckets/{time_bucket_id}/bucket_items', type: :reque
       description 'Creates a new bucket item'
       consumes 'application/json'
       produces 'application/json'
-      security [{ cookie_auth: [] }]
+      parameter name: :Cookie, in: :header, type: :string, required: false, description: 'Session cookie'
       
       parameter name: :bucket_item, in: :body, schema: {
         type: :object,
@@ -80,7 +103,17 @@ RSpec.describe 'api/v1/time_buckets/{time_bucket_id}/bucket_items', type: :reque
         let(:time_bucket_id) { bucket.id }
         let(:bucket_item) { { title: 'Learn Japanese', category: 'learning' } }
         
-        before { sign_in(user) }
+        let(:user_session) { create(:session, user: user) }
+        
+        let(:Cookie) do
+        
+          jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
+        
+          jar.signed[:session_token] = user_session.token
+        
+          jar.instance_variable_get(:@set_cookies).transform_values { |v| v[:value] }.map { |k, v| "#{k}=#{v}" }.join('; ')
+        
+        end
         
         run_test! do |response|
           data = JSON.parse(response.body)
@@ -97,7 +130,17 @@ RSpec.describe 'api/v1/time_buckets/{time_bucket_id}/bucket_items', type: :reque
         let(:time_bucket_id) { bucket.id }
         let(:bucket_item) { { title: '' } }  # Missing required fields
         
-        before { sign_in(user) }
+        let(:user_session) { create(:session, user: user) }
+        
+        let(:Cookie) do
+        
+          jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
+        
+          jar.signed[:session_token] = user_session.token
+        
+          jar.instance_variable_get(:@set_cookies).transform_values { |v| v[:value] }.map { |k, v| "#{k}=#{v}" }.join('; ')
+        
+        end
         
         run_test!
       end
@@ -109,7 +152,17 @@ RSpec.describe 'api/v1/time_buckets/{time_bucket_id}/bucket_items', type: :reque
         let(:time_bucket_id) { 99999 }
         let(:bucket_item) { { title: 'Test', category: 'learning' } }
         
-        before { sign_in(user) }
+        let(:user_session) { create(:session, user: user) }
+        
+        let(:Cookie) do
+        
+          jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
+        
+          jar.signed[:session_token] = user_session.token
+        
+          jar.instance_variable_get(:@set_cookies).transform_values { |v| v[:value] }.map { |k, v| "#{k}=#{v}" }.join('; ')
+        
+        end
         
         run_test!
       end
@@ -134,7 +187,7 @@ RSpec.describe 'api/v1/time_buckets/{time_bucket_id}/bucket_items', type: :reque
       tags 'Bucket Items'
       description 'Retrieves a specific bucket item'
       produces 'application/json'
-      security [{ cookie_auth: [] }]
+      parameter name: :Cookie, in: :header, type: :string, required: false, description: 'Session cookie'
 
       response(200, 'successful') do
         schema '$ref' => '#/components/schemas/BucketItem'
@@ -145,7 +198,17 @@ RSpec.describe 'api/v1/time_buckets/{time_bucket_id}/bucket_items', type: :reque
         let(:time_bucket_id) { bucket.id }
         let(:id) { item.id }
         
-        before { sign_in(user) }
+        let(:user_session) { create(:session, user: user) }
+        
+        let(:Cookie) do
+        
+          jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
+        
+          jar.signed[:session_token] = user_session.token
+        
+          jar.instance_variable_get(:@set_cookies).transform_values { |v| v[:value] }.map { |k, v| "#{k}=#{v}" }.join('; ')
+        
+        end
         
         run_test! do |response|
           data = JSON.parse(response.body)
@@ -161,7 +224,17 @@ RSpec.describe 'api/v1/time_buckets/{time_bucket_id}/bucket_items', type: :reque
         let(:time_bucket_id) { bucket.id }
         let(:id) { 99999 }
         
-        before { sign_in(user) }
+        let(:user_session) { create(:session, user: user) }
+        
+        let(:Cookie) do
+        
+          jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
+        
+          jar.signed[:session_token] = user_session.token
+        
+          jar.instance_variable_get(:@set_cookies).transform_values { |v| v[:value] }.map { |k, v| "#{k}=#{v}" }.join('; ')
+        
+        end
         
         run_test!
       end
@@ -183,7 +256,7 @@ RSpec.describe 'api/v1/time_buckets/{time_bucket_id}/bucket_items', type: :reque
       description 'Updates a specific bucket item'
       consumes 'application/json'
       produces 'application/json'
-      security [{ cookie_auth: [] }]
+      parameter name: :Cookie, in: :header, type: :string, required: false, description: 'Session cookie'
       
       parameter name: :bucket_item, in: :body, schema: {
         type: :object,
@@ -209,7 +282,17 @@ RSpec.describe 'api/v1/time_buckets/{time_bucket_id}/bucket_items', type: :reque
         let(:id) { item.id }
         let(:bucket_item) { { title: 'Updated title' } }
         
-        before { sign_in(user) }
+        let(:user_session) { create(:session, user: user) }
+        
+        let(:Cookie) do
+        
+          jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
+        
+          jar.signed[:session_token] = user_session.token
+        
+          jar.instance_variable_get(:@set_cookies).transform_values { |v| v[:value] }.map { |k, v| "#{k}=#{v}" }.join('; ')
+        
+        end
         
         run_test! do |response|
           data = JSON.parse(response.body)
@@ -226,7 +309,17 @@ RSpec.describe 'api/v1/time_buckets/{time_bucket_id}/bucket_items', type: :reque
         let(:id) { 99999 }
         let(:bucket_item) { { title: 'New' } }
         
-        before { sign_in(user) }
+        let(:user_session) { create(:session, user: user) }
+        
+        let(:Cookie) do
+        
+          jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
+        
+          jar.signed[:session_token] = user_session.token
+        
+          jar.instance_variable_get(:@set_cookies).transform_values { |v| v[:value] }.map { |k, v| "#{k}=#{v}" }.join('; ')
+        
+        end
         
         run_test!
       end
@@ -247,7 +340,7 @@ RSpec.describe 'api/v1/time_buckets/{time_bucket_id}/bucket_items', type: :reque
     delete('Delete bucket item') do
       tags 'Bucket Items'
       description 'Deletes a specific bucket item'
-      security [{ cookie_auth: [] }]
+      parameter name: :Cookie, in: :header, type: :string, required: false, description: 'Session cookie'
 
       response(204, 'no content') do
         let(:user) { create(:user) }
@@ -256,7 +349,17 @@ RSpec.describe 'api/v1/time_buckets/{time_bucket_id}/bucket_items', type: :reque
         let(:time_bucket_id) { bucket.id }
         let(:id) { item.id }
         
-        before { sign_in(user) }
+        let(:user_session) { create(:session, user: user) }
+        
+        let(:Cookie) do
+        
+          jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
+        
+          jar.signed[:session_token] = user_session.token
+        
+          jar.instance_variable_get(:@set_cookies).transform_values { |v| v[:value] }.map { |k, v| "#{k}=#{v}" }.join('; ')
+        
+        end
         
         run_test!
       end
@@ -269,7 +372,17 @@ RSpec.describe 'api/v1/time_buckets/{time_bucket_id}/bucket_items', type: :reque
         let(:time_bucket_id) { bucket.id }
         let(:id) { 99999 }
         
-        before { sign_in(user) }
+        let(:user_session) { create(:session, user: user) }
+        
+        let(:Cookie) do
+        
+          jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
+        
+          jar.signed[:session_token] = user_session.token
+        
+          jar.instance_variable_get(:@set_cookies).transform_values { |v| v[:value] }.map { |k, v| "#{k}=#{v}" }.join('; ')
+        
+        end
         
         run_test!
       end
@@ -295,7 +408,7 @@ RSpec.describe 'api/v1/time_buckets/{time_bucket_id}/bucket_items', type: :reque
       tags 'Bucket Items'
       description 'Marks a bucket item as completed and sets completed_at timestamp'
       produces 'application/json'
-      security [{ cookie_auth: [] }]
+      parameter name: :Cookie, in: :header, type: :string, required: false, description: 'Session cookie'
 
       response(200, 'successful') do
         schema '$ref' => '#/components/schemas/BucketItem'
@@ -306,7 +419,17 @@ RSpec.describe 'api/v1/time_buckets/{time_bucket_id}/bucket_items', type: :reque
         let(:time_bucket_id) { bucket.id }
         let(:id) { item.id }
         
-        before { sign_in(user) }
+        let(:user_session) { create(:session, user: user) }
+        
+        let(:Cookie) do
+        
+          jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
+        
+          jar.signed[:session_token] = user_session.token
+        
+          jar.instance_variable_get(:@set_cookies).transform_values { |v| v[:value] }.map { |k, v| "#{k}=#{v}" }.join('; ')
+        
+        end
         
         run_test! do |response|
           data = JSON.parse(response.body)
@@ -323,7 +446,17 @@ RSpec.describe 'api/v1/time_buckets/{time_bucket_id}/bucket_items', type: :reque
         let(:time_bucket_id) { bucket.id }
         let(:id) { 99999 }
         
-        before { sign_in(user) }
+        let(:user_session) { create(:session, user: user) }
+        
+        let(:Cookie) do
+        
+          jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
+        
+          jar.signed[:session_token] = user_session.token
+        
+          jar.instance_variable_get(:@set_cookies).transform_values { |v| v[:value] }.map { |k, v| "#{k}=#{v}" }.join('; ')
+        
+        end
         
         run_test!
       end

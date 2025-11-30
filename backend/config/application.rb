@@ -41,7 +41,10 @@ module App
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
     
-    # Enable cookies for API authentication (without session)
+    # Enable cookies and session for OAuth authentication
     config.middleware.use ActionDispatch::Cookies
+    config.middleware.use ActionDispatch::Session::CookieStore, 
+                          key: '_time_bucket_session', 
+                          secret: Rails.application.secret_key_base
   end
 end

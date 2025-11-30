@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+  skip_authentication
+  
   # OAuth callback handler
   def create
     auth = request.env['omniauth.auth']

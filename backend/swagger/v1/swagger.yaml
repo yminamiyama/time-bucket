@@ -90,13 +90,12 @@ paths:
                 category:
                   type: string
                   enum:
-                  - learning
+                  - travel
                   - career
-                  - relationships
-                  - health
+                  - family
                   - finance
-                  - personal_growth
-                  - hobbies
+                  - health
+                  - learning
                   - other
                   example: learning
                 value_statement:
@@ -203,13 +202,12 @@ paths:
                 category:
                   type: string
                   enum:
-                  - learning
+                  - travel
                   - career
-                  - relationships
-                  - health
+                  - family
                   - finance
-                  - personal_growth
-                  - hobbies
+                  - health
+                  - learning
                   - other
                 value_statement:
                   type: string

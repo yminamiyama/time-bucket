@@ -31,7 +31,10 @@ export default function BucketListPage() {
         ? ItemStatus.DONE
         : ItemStatus.PLANNED;
 
-    updateItem(item.timeBucketId, item.id, { status: nextStatus });
+    const completedAt =
+      nextStatus === ItemStatus.DONE ? new Date().toISOString() : undefined;
+
+    updateItem(item.timeBucketId, item.id, { status: nextStatus, completedAt });
   };
 
   const handleCreateItem = async (payload: Partial<BucketItem>) => {

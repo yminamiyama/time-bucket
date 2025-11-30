@@ -78,7 +78,8 @@ module Api
           :value_statement,
           :cost_estimate,
           :target_year,
-          :motivation_note
+          :motivation_note,
+          :completed_at
         )
       end
     end

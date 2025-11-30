@@ -61,3 +61,6 @@ production:
   cable:
     <<: *default
     url: <%= ENV.fetch("DATABASE_URL") %>
+  queue:
+    <<: *default
+    url: <%= ENV.fetch("DATABASE_URL") %>

@@ -15,3 +15,5 @@ end
 # In production, use POST only for security (CSRF protection)
 # In development, allow GET for easier browser testing
 OmniAuth.config.allowed_request_methods = Rails.env.production? ? [:post] : [:get, :post]
+# for security
+OmniAuth.config.request_validation_phase = nil

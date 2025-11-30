@@ -19,6 +19,13 @@ class SessionsController < ApplicationController
     end
 
     if user.persisted?
+      if user.time_buckets.empty?
+        generator = TimeBucketTemplateGenerator.new(user: user, granularity: '5y')
+        unless generator.generate
+          Rails.logger.error "Failed to generate default time buckets for user #{user.id}: #{generator.errors.join(', ')}"
+        end
+      end
+
       # Create new session
       session = user.sessions.create(
         ip_address: request.remote_ip,

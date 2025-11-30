@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 export default function BucketListPage() {
-  const { buckets, updateItem } = useBuckets();
+  const { buckets, updateItem, isLoading, isError } = useBuckets();
   const [selectedBucketId, setSelectedBucketId] = useState<string | null>(null);
 
   const effectiveBucketId = selectedBucketId ?? buckets[0]?.id ?? null;
@@ -27,6 +27,22 @@ export default function BucketListPage() {
 
     updateItem(item.timeBucketId, item.id, { status: nextStatus });
   };
+
+  if (isLoading) {
+    return <div className="p-6 text-muted-foreground">Loading...</div>;
+  }
+
+  if (isError) {
+    return <div className="p-6 text-destructive">データの取得に失敗しました。</div>;
+  }
+
+  if (buckets.length === 0) {
+    return (
+      <div className="p-6 text-muted-foreground">
+        バケットがありません。最初のバケットを作成してください。
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col lg:flex-row h-[calc(100vh-100px)] gap-6">

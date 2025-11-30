@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Activity, LayoutDashboard, ListTodo, Settings, UserCircle } from "lucide-react";
+import { Activity, LayoutDashboard, ListTodo, Settings, UserCircle, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/hooks/use-buckets";
 import { useMemo, useState, useTransition } from "react";
 import { createPortal } from "react-dom";
+import { BACKEND_BASE_URL } from "@/lib/api-client";
 
 export function Sidebar({ className }: { className?: string }) {
   const pathname = usePathname();
@@ -41,6 +42,19 @@ export function Sidebar({ className }: { className?: string }) {
         setError(e instanceof Error ? e.message : "更新に失敗しました");
       }
     });
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch(`${BACKEND_BASE_URL || ""}/logout`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+    } catch (e) {
+      console.error("Logout failed", e);
+    } finally {
+      window.location.href = "/login";
+    }
   };
 
   return (
@@ -137,21 +151,31 @@ export function Sidebar({ className }: { className?: string }) {
 
                   {error && <p className="text-xs text-destructive">{error}</p>}
                 </div>
-                <div className="px-4 py-3 border-t flex justify-end gap-2 bg-slate-50">
+                <div className="px-4 py-3 border-t flex items-center justify-between bg-slate-50">
                   <button
-                    onClick={() => setOpen(false)}
-                    className="px-4 py-2 text-sm rounded-lg border hover:bg-accent"
+                    onClick={handleLogout}
+                    className="text-sm text-destructive hover:underline flex items-center gap-1 disabled:opacity-50"
                     disabled={pending}
                   >
-                    キャンセル
+                    <LogOut size={16} />
+                    ログアウト
                   </button>
-                  <button
-                    onClick={handleSave}
-                    disabled={pending}
-                    className="px-4 py-2 text-sm rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-60"
-                  >
-                    {pending ? "保存中..." : "保存"}
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setOpen(false)}
+                      className="px-4 py-2 text-sm rounded-lg border hover:bg-accent"
+                      disabled={pending}
+                    >
+                      キャンセル
+                    </button>
+                    <button
+                      onClick={handleSave}
+                      disabled={pending}
+                      className="px-4 py-2 text-sm rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-60"
+                    >
+                      {pending ? "保存中..." : "保存"}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>,

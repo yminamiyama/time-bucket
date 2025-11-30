@@ -103,15 +103,19 @@ paths:
                   type: string
                   example: Expand cultural understanding
                 difficulty:
-                  type: integer
-                  minimum: 1
-                  maximum: 5
-                  example: 3
+                  type: string
+                  enum:
+                  - low
+                  - medium
+                  - high
+                  example: medium
                 risk_level:
-                  type: integer
-                  minimum: 1
-                  maximum: 5
-                  example: 2
+                  type: string
+                  enum:
+                  - low
+                  - medium
+                  - high
+                  example: low
                 cost_estimate:
                   type: integer
                   example: 50000
@@ -210,13 +214,17 @@ paths:
                 value_statement:
                   type: string
                 difficulty:
-                  type: integer
-                  minimum: 1
-                  maximum: 5
+                  type: string
+                  enum:
+                  - low
+                  - medium
+                  - high
                 risk_level:
-                  type: integer
-                  minimum: 1
-                  maximum: 5
+                  type: string
+                  enum:
+                  - low
+                  - medium
+                  - high
                 cost_estimate:
                   type: integer
                 target_year:

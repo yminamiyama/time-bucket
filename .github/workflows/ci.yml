@@ -50,6 +50,8 @@ jobs:
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/time_bucket_test
+          GOOGLE_OAUTH_CLIENT_ID: test_client_id
+          GOOGLE_OAUTH_CLIENT_SECRET: test_client_secret
         run: |
           cd backend
           bundle exec rspec --format documentation

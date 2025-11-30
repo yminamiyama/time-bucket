@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
     # Validate OAuth data
     unless auth.present? && auth['provider'].present? && auth['uid'].present? && auth.dig('info', 'email').present?
       Rails.logger.error "Invalid OAuth data received: #{auth.inspect}"
-      redirect_to ENV.fetch('FRONTEND_URL', 'http://localhost:3000'), alert: 'Authentication failed. Invalid data received.'
+      redirect_to ENV.fetch('FRONTEND_URL', 'http://localhost:3000'), alert: 'Authentication failed. Invalid data received.', allow_other_host: true
       return
     end
     
@@ -34,14 +34,14 @@ class SessionsController < ApplicationController
           same_site: :lax
         }
         
-        redirect_to ENV.fetch('FRONTEND_URL', 'http://localhost:3000'), notice: 'Signed in successfully.'
+        redirect_to ENV.fetch('FRONTEND_URL', 'http://localhost:3000'), notice: 'Signed in successfully.', allow_other_host: true
       else
         Rails.logger.error "Failed to create session for user #{user.id}: #{session.errors.full_messages.join(', ')}"
-        redirect_to ENV.fetch('FRONTEND_URL', 'http://localhost:3000'), alert: 'Authentication failed. Please try again.'
+        redirect_to ENV.fetch('FRONTEND_URL', 'http://localhost:3000'), alert: 'Authentication failed. Please try again.', allow_other_host: true
       end
     else
       Rails.logger.error "Failed to create user from OAuth: #{user.errors.full_messages.join(', ')}"
-      redirect_to ENV.fetch('FRONTEND_URL', 'http://localhost:3000'), alert: 'Authentication failed.'
+      redirect_to ENV.fetch('FRONTEND_URL', 'http://localhost:3000'), alert: 'Authentication failed.', allow_other_host: true
     end
   end
 
@@ -51,11 +51,11 @@ class SessionsController < ApplicationController
     end
     
     cookies.delete(:session_token)
-    redirect_to ENV.fetch('FRONTEND_URL', 'http://localhost:3000'), notice: 'Signed out successfully.'
+    redirect_to ENV.fetch('FRONTEND_URL', 'http://localhost:3000'), notice: 'Signed out successfully.', allow_other_host: true
   end
   
   # OAuth failure handler
   def failure
-    redirect_to ENV.fetch('FRONTEND_URL', 'http://localhost:3000'), alert: 'Authentication failed. Please try again.'
+    redirect_to ENV.fetch('FRONTEND_URL', 'http://localhost:3000'), alert: 'Authentication failed. Please try again.', allow_other_host: true
   end
 end

@@ -1,0 +1,1005 @@
+---
+openapi: 3.0.1
+info:
+  title: Time Bucket API
+  version: v1
+  description: API documentation for Time Bucket application - A life planning tool
+    to manage goals across different time periods
+  contact:
+    name: Time Bucket Development Team
+    url: https://github.com/yminamiyama/time-bucket
+paths:
+  "/api/v1/time_buckets/{time_bucket_id}/bucket_items":
+    parameters:
+    - name: time_bucket_id
+      in: path
+      description: Time bucket ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: List bucket items
+      tags:
+      - Bucket Items
+      description: Retrieves all bucket items for a specific time bucket
+      security:
+      - cookie_auth: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/BucketItem"
+        '404':
+          description: time bucket not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+    post:
+      summary: Create bucket item
+      tags:
+      - Bucket Items
+      description: Creates a new bucket item
+      security:
+      - cookie_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BucketItem"
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ValidationError"
+        '404':
+          description: time bucket not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: Learn a new language
+                category:
+                  type: string
+                  enum:
+                  - travel
+                  - career
+                  - family
+                  - finance
+                  - health
+                  - learning
+                  - other
+                  example: learning
+                value_statement:
+                  type: string
+                  example: Expand cultural understanding
+                difficulty:
+                  type: string
+                  enum:
+                  - low
+                  - medium
+                  - high
+                  example: medium
+                risk_level:
+                  type: string
+                  enum:
+                  - low
+                  - medium
+                  - high
+                  example: low
+                cost_estimate:
+                  type: integer
+                  example: 50000
+                target_year:
+                  type: integer
+                  example: 2025
+              required:
+              - title
+              - category
+  "/api/v1/time_buckets/{time_bucket_id}/bucket_items/{id}":
+    parameters:
+    - name: time_bucket_id
+      in: path
+      description: Time bucket ID
+      required: true
+      schema:
+        type: integer
+    - name: id
+      in: path
+      description: Bucket item ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Show bucket item
+      tags:
+      - Bucket Items
+      description: Retrieves a specific bucket item
+      security:
+      - cookie_auth: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BucketItem"
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+    patch:
+      summary: Update bucket item
+      tags:
+      - Bucket Items
+      description: Updates a specific bucket item
+      security:
+      - cookie_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BucketItem"
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                category:
+                  type: string
+                  enum:
+                  - travel
+                  - career
+                  - family
+                  - finance
+                  - health
+                  - learning
+                  - other
+                value_statement:
+                  type: string
+                difficulty:
+                  type: string
+                  enum:
+                  - low
+                  - medium
+                  - high
+                risk_level:
+                  type: string
+                  enum:
+                  - low
+                  - medium
+                  - high
+                cost_estimate:
+                  type: integer
+                target_year:
+                  type: integer
+                status:
+                  type: string
+                  enum:
+                  - planned
+                  - in_progress
+                  - done
+    delete:
+      summary: Delete bucket item
+      tags:
+      - Bucket Items
+      description: Deletes a specific bucket item
+      security:
+      - cookie_auth: []
+      responses:
+        '204':
+          description: no content
+        '404':
+          description: not found
+        '401':
+          description: unauthorized
+  "/api/v1/time_buckets/{time_bucket_id}/bucket_items/{id}/complete":
+    parameters:
+    - name: time_bucket_id
+      in: path
+      description: Time bucket ID
+      required: true
+      schema:
+        type: integer
+    - name: id
+      in: path
+      description: Bucket item ID
+      required: true
+      schema:
+        type: integer
+    patch:
+      summary: Mark bucket item as completed
+      tags:
+      - Bucket Items
+      description: Marks a bucket item as completed and sets completed_at timestamp
+      security:
+      - cookie_auth: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BucketItem"
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+  "/api/v1/dashboard/summary":
+    get:
+      summary: Get dashboard summary
+      tags:
+      - Dashboard
+      description: Retrieves dashboard summary statistics including bucket counts
+        and item progress
+      security:
+      - cookie_auth: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_buckets:
+                    type: integer
+                    example: 16
+                  total_items:
+                    type: integer
+                    example: 42
+                  completed_items:
+                    type: integer
+                    example: 8
+                  active_items:
+                    type: integer
+                    example: 30
+                  archived_items:
+                    type: integer
+                    example: 4
+                required:
+                - total_buckets
+                - total_items
+                - completed_items
+                - active_items
+                - archived_items
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+  "/api/v1/dashboard/actions-now":
+    get:
+      summary: Get actions for current time bucket
+      tags:
+      - Dashboard
+      description: Retrieves bucket items that should be actioned now based on user
+        current age
+      security:
+      - cookie_auth: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/BucketItem"
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+  "/api/v1/dashboard/review-completed":
+    get:
+      summary: Get recently completed items for review
+      tags:
+      - Dashboard
+      description: Retrieves recently completed bucket items for review
+      security:
+      - cookie_auth: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/BucketItem"
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+  "/api/v1/notification_settings":
+    get:
+      summary: Get notification settings
+      tags:
+      - Notification Settings
+      description: Retrieves the authenticated user notification preferences
+      security:
+      - cookie_auth: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/NotificationPreference"
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+    patch:
+      summary: Update notification settings
+      tags:
+      - Notification Settings
+      description: Updates the authenticated user notification preferences
+      security:
+      - cookie_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/NotificationPreference"
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ValidationError"
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email_enabled:
+                  type: boolean
+                  example: true
+                slack_webhook_url:
+                  type: string
+                  format: uri
+                  example: https://hooks.slack.com/services/XXX
+                digest_time:
+                  type: string
+                  pattern: "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  example: '09:00'
+                events:
+                  type: object
+                  properties:
+                    bucket_item_completed:
+                      type: boolean
+                      example: true
+                    bucket_item_due_soon:
+                      type: boolean
+                      example: true
+                    weekly_summary:
+                      type: boolean
+                      example: false
+  "/api/v1/profile":
+    get:
+      summary: Get user profile
+      tags:
+      - Profile
+      description: Retrieves the authenticated user profile information
+      security:
+      - cookie_auth: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/User"
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+    patch:
+      summary: Update user profile
+      tags:
+      - Profile
+      description: Updates the authenticated user profile information
+      security:
+      - cookie_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/User"
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ValidationError"
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                birthdate:
+                  type: string
+                  format: date
+                  example: '1990-01-01'
+                timezone:
+                  type: string
+                  example: Asia/Tokyo
+  "/auth/google_oauth2/callback":
+    post:
+      summary: Google OAuth callback (production)
+      tags:
+      - Authentication
+      description: Google OAuth 2.0 callback endpoint for user authentication (production
+        environment)
+      parameters:
+      - name: code
+        in: query
+        description: OAuth authorization code
+        required: true
+        schema:
+          type: string
+      - name: state
+        in: query
+        description: OAuth state parameter
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: authentication successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Successfully authenticated
+                  user:
+                    "$ref": "#/components/schemas/User"
+                required:
+                - message
+                - user
+        '401':
+          description: authentication failed
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+    get:
+      summary: Google OAuth callback (development)
+      tags:
+      - Authentication
+      description: Google OAuth 2.0 callback endpoint for user authentication (development
+        environment only)
+      parameters:
+      - name: code
+        in: query
+        description: OAuth authorization code
+        required: true
+        schema:
+          type: string
+      - name: state
+        in: query
+        description: OAuth state parameter
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: authentication successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Successfully authenticated
+                  user:
+                    "$ref": "#/components/schemas/User"
+                required:
+                - message
+                - user
+  "/auth/google_oauth2":
+    get:
+      summary: Initiate Google OAuth (development)
+      tags:
+      - Authentication
+      description: Redirects to Google OAuth consent screen (development environment
+        only)
+      responses:
+        '302':
+          description: redirect to Google
+    post:
+      summary: Initiate Google OAuth (production)
+      tags:
+      - Authentication
+      description: Redirects to Google OAuth consent screen (production environment)
+      responses:
+        '302':
+          description: redirect to Google
+  "/api/v1/sessions":
+    delete:
+      summary: Logout
+      tags:
+      - Authentication
+      description: Logs out the current user by destroying their session
+      security:
+      - cookie_auth: []
+      responses:
+        '200':
+          description: logged out successfully
+        '401':
+          description: not authenticated
+  "/auth/failure":
+    get:
+      summary: OAuth failure callback
+      tags:
+      - Authentication
+      description: Handles OAuth authentication failures
+      parameters:
+      - name: message
+        in: query
+        description: Error message from OAuth provider
+        schema:
+          type: string
+      - name: strategy
+        in: query
+        description: OAuth strategy that failed
+        schema:
+          type: string
+      responses:
+        '401':
+          description: authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Authentication failed
+                  message:
+                    type: string
+                    example: invalid_credentials
+                  strategy:
+                    type: string
+                    example: google_oauth2
+                required:
+                - error
+  "/api/v1/time_buckets":
+    get:
+      summary: List time buckets
+      tags:
+      - Time Buckets
+      description: Retrieves all time buckets for the authenticated user, ordered
+        by position
+      security:
+      - cookie_auth: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/TimeBucket"
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+    post:
+      summary: Create time bucket
+      tags:
+      - Time Buckets
+      description: Creates a new time bucket
+      security:
+      - cookie_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/TimeBucket"
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ValidationError"
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                start_age:
+                  type: integer
+                  example: 30
+                end_age:
+                  type: integer
+                  example: 35
+                granularity:
+                  type: string
+                  enum:
+                  - 5y
+                  - 10y
+                  example: 5y
+                description:
+                  type: string
+                  example: Career building phase
+              required:
+              - start_age
+              - end_age
+              - granularity
+  "/api/v1/time_buckets/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Time bucket ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Show time bucket
+      tags:
+      - Time Buckets
+      description: Retrieves a specific time bucket
+      security:
+      - cookie_auth: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/TimeBucket"
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+    patch:
+      summary: Update time bucket
+      tags:
+      - Time Buckets
+      description: Updates a specific time bucket
+      security:
+      - cookie_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/TimeBucket"
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                  example: Updated description
+                position:
+                  type: integer
+                  example: 1
+    delete:
+      summary: Delete time bucket
+      tags:
+      - Time Buckets
+      description: Deletes a specific time bucket
+      security:
+      - cookie_auth: []
+      responses:
+        '204':
+          description: no content
+        '404':
+          description: not found
+        '401':
+          description: unauthorized
+  "/api/v1/time_buckets/templates":
+    post:
+      summary: Generate time bucket templates
+      tags:
+      - Time Buckets
+      description: Generates time bucket templates based on user age (20-100 years
+        old, 5-year intervals)
+      security:
+      - cookie_auth: []
+      responses:
+        '201':
+          description: templates created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/TimeBucket"
+        '422':
+          description: templates already exist
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+servers:
+- url: http://localhost:4000
+  description: Development server
+- url: https://{defaultHost}
+  description: Production server
+  variables:
+    defaultHost:
+      default: api.timebucket.example.com
+components:
+  securitySchemes:
+    cookie_auth:
+      type: apiKey
+      in: cookie
+      name: session_token
+      description: Session cookie obtained after Google OAuth authentication
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        birthdate:
+          type: string
+          format: date
+        current_age:
+          type: integer
+        timezone:
+          type: string
+        provider:
+          type: string
+          example: google_oauth2
+    TimeBucket:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        start_age:
+          type: integer
+        end_age:
+          type: integer
+        granularity:
+          type: string
+          enum:
+          - 5y
+          - 10y
+        position:
+          type: integer
+        description:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    BucketItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        time_bucket_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        category:
+          type: string
+          enum:
+          - travel
+          - career
+          - family
+          - finance
+          - health
+          - learning
+          - other
+        value_statement:
+          type: string
+        difficulty:
+          type: string
+          enum:
+          - easy
+          - medium
+          - hard
+        risk_level:
+          type: string
+          enum:
+          - low
+          - medium
+          - high
+        cost_estimate:
+          type: number
+          nullable: true
+        target_year:
+          type: integer
+          nullable: true
+        status:
+          type: string
+          enum:
+          - planned
+          - in_progress
+          - done
+          default: planned
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    NotificationPreference:
+      type: object
+      properties:
+        email_enabled:
+          type: boolean
+        slack_webhook_url:
+          type: string
+          format: uri
+          nullable: true
+        digest_time:
+          type: string
+          pattern: "^([01]\\d|2[0-3]):[0-5]\\d$"
+        events:
+          type: object
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+    ValidationError:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: string
+security:
+- cookie_auth: []

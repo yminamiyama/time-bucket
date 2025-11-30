@@ -52,6 +52,7 @@ module Api
       def time_bucket_params
         params.require(:time_bucket).permit(
           :label,
+          :description,
           :start_age,
           :end_age,
           :granularity,

@@ -3,7 +3,7 @@
 import React from "react";
 import { CATEGORY_CONFIG } from "@/constants";
 import { Category, ItemStatus, TimeBucket } from "@/types";
-import { AlertCircle, CheckCircle2, Circle } from "lucide-react";
+import { AlertCircle, CheckCircle2, Circle, Clock3 } from "lucide-react";
 
 interface BucketCardProps {
   bucket: TimeBucket;
@@ -62,7 +62,7 @@ const BucketCard: React.FC<BucketCardProps> = ({ bucket, isActive, onSelect }) =
                 {item.status === ItemStatus.DONE ? (
                   <CheckCircle2 size={16} className="text-green-500 mt-0.5 shrink-0" />
                 ) : item.status === ItemStatus.IN_PROGRESS ? (
-                  <div className="mt-0.5 h-4 w-4 rounded-full border-2 border-blue-500 border-t-transparent animate-spin shrink-0" />
+                  <Clock3 size={16} className="text-blue-500 mt-0.5 shrink-0" />
                 ) : (
                   <Circle size={16} className="text-slate-300 mt-0.5 shrink-0" />
                 )}

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Plus, Calendar, DollarSign, Tag, CheckCircle2, Pencil, Trash2 } from "lucide-react";
+import { Plus, Calendar, DollarSign, Tag, Pencil, Trash2 } from "lucide-react";
 import { useBuckets, useUser } from "@/hooks/use-buckets";
 import BucketCard from "@/components/BucketCard";
 import { ItemStatus, BucketItem } from "@/types";
@@ -10,6 +10,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { BucketItemDialog } from "@/components/buckets/BucketItemDialog";
+import { StatusSelector } from "@/components/buckets/StatusSelector";
 
 export default function BucketListPage() {
   const { buckets, updateItem, createItem, deleteItem, isLoading, isError } = useBuckets();
@@ -22,20 +23,6 @@ export default function BucketListPage() {
 
   const effectiveBucketId = selectedBucketId ?? buckets[0]?.id ?? null;
   const selectedBucket = buckets.find((b) => b.id === effectiveBucketId);
-
-  const handleToggleStatus = (item: BucketItem) => {
-    const nextStatus =
-      item.status === ItemStatus.PLANNED
-        ? ItemStatus.IN_PROGRESS
-        : item.status === ItemStatus.IN_PROGRESS
-        ? ItemStatus.DONE
-        : ItemStatus.PLANNED;
-
-    const completedAt =
-      nextStatus === ItemStatus.DONE ? new Date().toISOString() : undefined;
-
-    updateItem(item.timeBucketId, item.id, { status: nextStatus, completedAt });
-  };
 
   const handleCreateItem = async (payload: Partial<BucketItem>) => {
     if (!selectedBucket) throw new Error("バケットが選択されていません。");
@@ -148,15 +135,13 @@ export default function BucketListPage() {
                       )}
                     >
                       <div className="flex gap-4">
-                        <button
-                          onClick={() => handleToggleStatus(item)}
-                          className={cn(
-                            "mt-1 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors shrink-0",
-                            isDone ? "bg-green-500 border-green-500" : "border-slate-300 hover:border-brand-500"
-                          )}
-                        >
-                          {isDone && <CheckCircle2 size={14} className="text-white" />}
-                        </button>
+                        <StatusSelector
+                          value={item.status}
+                          onChange={(status) => {
+                            const completedAt = status === ItemStatus.DONE ? new Date().toISOString() : undefined;
+                            updateItem(item.timeBucketId, item.id, { status, completedAt });
+                          }}
+                        />
 
                         <div className="flex-1">
                           <div className="flex justify-between items-start">

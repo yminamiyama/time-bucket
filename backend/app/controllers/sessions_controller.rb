@@ -38,7 +38,7 @@ class SessionsController < ApplicationController
           value: session.token,
           httponly: true,
           secure: Rails.env.production?,
-          same_site: :lax
+          same_site: Rails.env.production? ? :none : :lax
         }
         
         redirect_to ENV.fetch('FRONTEND_URL', 'http://localhost:3000'), notice: 'Signed in successfully.', allow_other_host: true

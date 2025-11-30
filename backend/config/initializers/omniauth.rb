@@ -12,6 +12,6 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   end
 end
 
-# Allow GET requests in development for easier testing
-# In production, consider using POST only for security
-OmniAuth.config.allowed_request_methods = [:get, :post]
+# In production, use POST only for security (CSRF protection)
+# In development, allow GET for easier browser testing
+OmniAuth.config.allowed_request_methods = Rails.env.production? ? [:post] : [:get, :post]

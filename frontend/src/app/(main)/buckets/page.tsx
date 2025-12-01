@@ -59,8 +59,10 @@ export default function BucketListPage() {
     const contRect = container.getBoundingClientRect();
     const isAbove = elRect.top < contRect.top;
     const isBelow = elRect.bottom > contRect.bottom;
-    if (isAbove || isBelow) {
-      el.scrollIntoView({ behavior: "smooth", block: "center" });
+    const isLeft = elRect.left < contRect.left;
+    const isRight = elRect.right > contRect.right;
+    if (isAbove || isBelow || isLeft || isRight) {
+      el.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
     }
   }, [effectiveBucketId, buckets]);
 
@@ -107,16 +109,19 @@ export default function BucketListPage() {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row h-[calc(100vh-100px)] gap-6">
-      <div
-        ref={listRef}
-        className="lg:w-1/3 flex flex-col gap-4 overflow-y-auto no-scrollbar pb-10"
-      >
-        <h2 className="text-2xl font-bold tracking-tight sticky top-0 bg-slate-50 py-2 z-10">マイ・タイムバケット</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
+    <div className="flex flex-col lg:flex-row gap-6 min-h-screen lg:h-[calc(100vh-100px)]">
+      <div className="lg:w-1/3 flex flex-col gap-3">
+        <h2 className="text-2xl font-bold tracking-tight sticky top-0 bg-slate-50 py-2 z-10">
+          マイ・タイムバケット
+        </h2>
+        <div
+          ref={listRef}
+          className="flex gap-3 overflow-x-auto lg:overflow-y-auto no-scrollbar pb-4 lg:pb-10 flex-row lg:flex-col pr-2"
+        >
           {buckets.map((bucket) => (
             <div
               key={bucket.id}
+              className="min-w-[240px] max-w-[260px] lg:min-w-full"
               ref={(el) => {
                 cardRefs.current[bucket.id] = el;
               }}
@@ -144,20 +149,20 @@ export default function BucketListPage() {
                   <h2 className="text-3xl font-bold text-slate-900">{selectedBucket.label}</h2>
                   <p className="text-muted-foreground mt-1">{selectedBucket.description}</p>
                 </div>
-                <button
-                  className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg transition-colors shadow-sm text-sm font-medium"
-                  onClick={() => {
-                    setEditingItem(null);
-                    setDialogOpen(true);
-                  }}
-                >
-                  <Plus size={18} />
-                  体験を追加
-                </button>
-              </div>
+              <button
+                className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg transition-colors shadow-sm text-sm font-medium"
+                onClick={() => {
+                  setEditingItem(null);
+                  setDialogOpen(true);
+                }}
+              >
+                <Plus size={18} />
+                体験を追加
+              </button>
             </div>
+          </div>
 
-            <div className="flex-1 overflow-y-auto p-6 space-y-4">
+            <div className="flex-1 overflow-y-auto p-6 space-y-4 pb-28">
               {selectedBucket.items.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-muted-foreground">
                   <Calendar size={48} className="mb-4 opacity-20" />
@@ -259,6 +264,19 @@ export default function BucketListPage() {
           <div className="flex items-center justify-center h-full text-muted-foreground">Loading...</div>
         )}
       </Card>
+
+      {/* モバイル用 FAB */}
+      <button
+        className="lg:hidden fixed right-5 h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-xl flex items-center justify-center hover:bg-primary/90 transition-colors"
+        style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 88px)" }}
+        aria-label="体験を追加"
+        onClick={() => {
+          setEditingItem(null);
+          setDialogOpen(true);
+        }}
+      >
+        <Plus size={24} />
+      </button>
 
       <BucketItemDialog
         open={dialogOpen}

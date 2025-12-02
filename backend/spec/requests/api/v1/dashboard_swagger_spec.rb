@@ -1,7 +1,7 @@
 require 'swagger_helper'
 
 RSpec.describe 'api/v1/dashboard', type: :request do
-  path '/api/v1/dashboard/summary' do
+  path '/v1/dashboard/summary' do
     get('Get dashboard summary') do
       tags 'Dashboard'
       description 'Retrieves dashboard summary statistics including bucket counts and item progress'
@@ -90,7 +90,7 @@ RSpec.describe 'api/v1/dashboard', type: :request do
     end
   end
 
-  path '/api/v1/dashboard/actions-now' do
+  path '/v1/dashboard/actions-now' do
     get('Get actions for current time bucket') do
       tags 'Dashboard'
       description 'Retrieves bucket items that should be actioned now based on user current age'
@@ -146,7 +146,7 @@ RSpec.describe 'api/v1/dashboard', type: :request do
     end
   end
 
-  path '/api/v1/dashboard/review-completed' do
+  path '/v1/dashboard/review-completed' do
     get('Get recently completed items for review') do
       tags 'Dashboard'
       description 'Retrieves recently completed bucket items for review'

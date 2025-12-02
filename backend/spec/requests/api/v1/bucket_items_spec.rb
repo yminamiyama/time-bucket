@@ -30,7 +30,7 @@ RSpec.describe "Api::V1::BucketItems", type: :request do
     }
   end
 
-  describe "GET /api/v1/time_buckets/:time_bucket_id/bucket_items" do
+  describe "GET /v1/time_buckets/:time_bucket_id/bucket_items" do
     context "when authenticated" do
       before do
         create_list(:bucket_item, 3, time_bucket: time_bucket)
@@ -38,7 +38,7 @@ RSpec.describe "Api::V1::BucketItems", type: :request do
       end
       
       it "returns bucket items for the time bucket" do
-        get "/api/v1/time_buckets/#{time_bucket.id}/bucket_items", headers: auth_headers(session)
+        get "/v1/time_buckets/#{time_bucket.id}/bucket_items", headers: auth_headers(session)
         
         expect(response).to have_http_status(:success)
         json = JSON.parse(response.body)
@@ -48,25 +48,25 @@ RSpec.describe "Api::V1::BucketItems", type: :request do
     
     context "when accessing other user's time bucket" do
       it "returns 404" do
-        get "/api/v1/time_buckets/#{other_time_bucket.id}/bucket_items", headers: auth_headers(session)
+        get "/v1/time_buckets/#{other_time_bucket.id}/bucket_items", headers: auth_headers(session)
         expect(response).to have_http_status(:not_found)
       end
     end
     
     context "when not authenticated" do
       it "returns 401" do
-        get "/api/v1/time_buckets/#{time_bucket.id}/bucket_items"
+        get "/v1/time_buckets/#{time_bucket.id}/bucket_items"
         expect(response).to have_http_status(:unauthorized)
       end
     end
   end
 
-  describe "GET /api/v1/bucket_items/:id" do
+  describe "GET /v1/bucket_items/:id" do
     let(:bucket_item) { create(:bucket_item, time_bucket: time_bucket) }
     
     context "when authenticated" do
       it "returns the bucket item" do
-        get "/api/v1/bucket_items/#{bucket_item.id}", headers: auth_headers(session)
+        get "/v1/bucket_items/#{bucket_item.id}", headers: auth_headers(session)
         
         expect(response).to have_http_status(:success)
         json = JSON.parse(response.body)
@@ -79,24 +79,24 @@ RSpec.describe "Api::V1::BucketItems", type: :request do
       let(:other_item) { create(:bucket_item, time_bucket: other_time_bucket) }
       
       it "returns 404" do
-        get "/api/v1/bucket_items/#{other_item.id}", headers: auth_headers(session)
+        get "/v1/bucket_items/#{other_item.id}", headers: auth_headers(session)
         expect(response).to have_http_status(:not_found)
       end
     end
     
     context "when not authenticated" do
       it "returns 401" do
-        get "/api/v1/bucket_items/#{bucket_item.id}"
+        get "/v1/bucket_items/#{bucket_item.id}"
         expect(response).to have_http_status(:unauthorized)
       end
     end
   end
 
-  describe "POST /api/v1/time_buckets/:time_bucket_id/bucket_items" do
+  describe "POST /v1/time_buckets/:time_bucket_id/bucket_items" do
     context "with valid parameters" do
       it "creates a new bucket item" do
         expect {
-          post "/api/v1/time_buckets/#{time_bucket.id}/bucket_items",
+          post "/v1/time_buckets/#{time_bucket.id}/bucket_items",
                params: { bucket_item: valid_attributes },
                headers: auth_headers(session)
         }.to change(BucketItem, :count).by(1)
@@ -109,7 +109,7 @@ RSpec.describe "Api::V1::BucketItems", type: :request do
     
     context "with invalid parameters" do
       it "returns unprocessable entity" do
-        post "/api/v1/time_buckets/#{time_bucket.id}/bucket_items",
+        post "/v1/time_buckets/#{time_bucket.id}/bucket_items",
              params: { bucket_item: invalid_attributes },
              headers: auth_headers(session)
         
@@ -121,20 +121,20 @@ RSpec.describe "Api::V1::BucketItems", type: :request do
     
     context "when not authenticated" do
       it "returns 401" do
-        post "/api/v1/time_buckets/#{time_bucket.id}/bucket_items",
+        post "/v1/time_buckets/#{time_bucket.id}/bucket_items",
              params: { bucket_item: valid_attributes }
         expect(response).to have_http_status(:unauthorized)
       end
     end
   end
 
-  describe "PATCH /api/v1/bucket_items/:id" do
+  describe "PATCH /v1/bucket_items/:id" do
     let(:bucket_item) { create(:bucket_item, time_bucket: time_bucket) }
     let(:new_attributes) { { title: "Updated Title", status: "in_progress" } }
     
     context "with valid parameters" do
       it "updates the bucket item" do
-        patch "/api/v1/bucket_items/#{bucket_item.id}",
+        patch "/v1/bucket_items/#{bucket_item.id}",
               params: { bucket_item: new_attributes },
               headers: auth_headers(session)
         
@@ -147,7 +147,7 @@ RSpec.describe "Api::V1::BucketItems", type: :request do
     
     context "with invalid parameters" do
       it "returns unprocessable entity" do
-        patch "/api/v1/bucket_items/#{bucket_item.id}",
+        patch "/v1/bucket_items/#{bucket_item.id}",
               params: { bucket_item: { title: "", category: "invalid" } },
               headers: auth_headers(session)
         
@@ -159,7 +159,7 @@ RSpec.describe "Api::V1::BucketItems", type: :request do
       let(:other_item) { create(:bucket_item, time_bucket: other_time_bucket) }
       
       it "returns 404" do
-        patch "/api/v1/bucket_items/#{other_item.id}",
+        patch "/v1/bucket_items/#{other_item.id}",
               params: { bucket_item: new_attributes },
               headers: auth_headers(session)
         
@@ -168,12 +168,12 @@ RSpec.describe "Api::V1::BucketItems", type: :request do
     end
   end
 
-  describe "PATCH /api/v1/bucket_items/:id/complete" do
+  describe "PATCH /v1/bucket_items/:id/complete" do
     let(:bucket_item) { create(:bucket_item, time_bucket: time_bucket, status: "in_progress") }
     
     context "when authenticated" do
       it "marks the item as done" do
-        patch "/api/v1/bucket_items/#{bucket_item.id}/complete", headers: auth_headers(session)
+        patch "/v1/bucket_items/#{bucket_item.id}/complete", headers: auth_headers(session)
         
         expect(response).to have_http_status(:success)
         bucket_item.reload
@@ -186,19 +186,19 @@ RSpec.describe "Api::V1::BucketItems", type: :request do
       let(:other_item) { create(:bucket_item, time_bucket: other_time_bucket) }
       
       it "returns 404" do
-        patch "/api/v1/bucket_items/#{other_item.id}/complete", headers: auth_headers(session)
+        patch "/v1/bucket_items/#{other_item.id}/complete", headers: auth_headers(session)
         expect(response).to have_http_status(:not_found)
       end
     end
   end
 
-  describe "DELETE /api/v1/bucket_items/:id" do
+  describe "DELETE /v1/bucket_items/:id" do
     let!(:bucket_item) { create(:bucket_item, time_bucket: time_bucket) }
     
     context "when authenticated" do
       it "destroys the bucket item" do
         expect {
-          delete "/api/v1/bucket_items/#{bucket_item.id}", headers: auth_headers(session)
+          delete "/v1/bucket_items/#{bucket_item.id}", headers: auth_headers(session)
         }.to change(BucketItem, :count).by(-1)
         
         expect(response).to have_http_status(:no_content)
@@ -210,7 +210,7 @@ RSpec.describe "Api::V1::BucketItems", type: :request do
       
       it "returns 404" do
         expect {
-          delete "/api/v1/bucket_items/#{other_item.id}", headers: auth_headers(session)
+          delete "/v1/bucket_items/#{other_item.id}", headers: auth_headers(session)
         }.not_to change(BucketItem, :count)
         
         expect(response).to have_http_status(:not_found)

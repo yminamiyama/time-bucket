@@ -1,7 +1,7 @@
 require 'swagger_helper'
 
 RSpec.describe 'api/v1/notification_settings', type: :request do
-  path '/api/v1/notification-settings' do
+  path '/v1/notification-settings' do
     get('Get notification settings') do
       tags 'Notification Settings'
       description 'Retrieves the authenticated user notification preferences'

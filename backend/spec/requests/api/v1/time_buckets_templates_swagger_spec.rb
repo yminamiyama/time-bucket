@@ -1,7 +1,7 @@
 require 'swagger_helper'
 
 RSpec.describe 'api/v1/time_buckets/templates', type: :request do
-  path '/api/v1/time_buckets/templates' do
+  path '/v1/time_buckets/templates' do
     post('Generate time bucket templates') do
       tags 'Time Buckets'
       description 'Generates time bucket templates based on user age (20-100 years old, 5-year intervals)'

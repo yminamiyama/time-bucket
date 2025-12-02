@@ -4,18 +4,18 @@ RSpec.describe "Api::V1::TimeBucketTemplates", type: :request do
   let(:user) { create(:user) }
   let(:session) { create(:session, user: user) }
 
-  describe "POST /api/v1/time_buckets/templates" do
+  describe "POST /v1/time_buckets/templates" do
     context "with 5 year granularity" do
       it "creates time buckets in 5-year intervals" do
         expect {
-          post "/api/v1/time_buckets/templates",
+          post "/v1/time_buckets/templates",
                params: { granularity: '5y' },
                headers: auth_headers(session)
         }.to change(TimeBucket, :count).by(16) # 20-24, 25-29, ..., 90-94, 95-100
       end
 
       it "returns created buckets with correct structure" do
-        post "/api/v1/time_buckets/templates",
+        post "/v1/time_buckets/templates",
              params: { granularity: '5y' },
              headers: auth_headers(session)
 
@@ -27,7 +27,7 @@ RSpec.describe "Api::V1::TimeBucketTemplates", type: :request do
       end
 
       it "creates buckets with correct age ranges" do
-        post "/api/v1/time_buckets/templates",
+        post "/v1/time_buckets/templates",
              params: { granularity: '5y' },
              headers: auth_headers(session)
 
@@ -42,7 +42,7 @@ RSpec.describe "Api::V1::TimeBucketTemplates", type: :request do
       end
 
       it "sets correct granularity" do
-        post "/api/v1/time_buckets/templates",
+        post "/v1/time_buckets/templates",
              params: { granularity: '5y' },
              headers: auth_headers(session)
 
@@ -53,14 +53,14 @@ RSpec.describe "Api::V1::TimeBucketTemplates", type: :request do
     context "with 10 year granularity" do
       it "creates time buckets in 10-year intervals" do
         expect {
-          post "/api/v1/time_buckets/templates",
+          post "/v1/time_buckets/templates",
                params: { granularity: '10y' },
                headers: auth_headers(session)
         }.to change(TimeBucket, :count).by(8) # 20-29, 30-39, ..., 80-89, 90-100
       end
 
       it "creates buckets with correct age ranges" do
-        post "/api/v1/time_buckets/templates",
+        post "/v1/time_buckets/templates",
              params: { granularity: '10y' },
              headers: auth_headers(session)
 
@@ -78,7 +78,7 @@ RSpec.describe "Api::V1::TimeBucketTemplates", type: :request do
 
     context "with invalid granularity" do
       it "returns unprocessable entity" do
-        post "/api/v1/time_buckets/templates",
+        post "/v1/time_buckets/templates",
              params: { granularity: 'invalid' },
              headers: auth_headers(session)
 
@@ -90,7 +90,7 @@ RSpec.describe "Api::V1::TimeBucketTemplates", type: :request do
 
       it "does not create any buckets" do
         expect {
-          post "/api/v1/time_buckets/templates",
+          post "/v1/time_buckets/templates",
                params: { granularity: 'invalid' },
                headers: auth_headers(session)
         }.not_to change(TimeBucket, :count)
@@ -99,7 +99,7 @@ RSpec.describe "Api::V1::TimeBucketTemplates", type: :request do
 
     context "when user is not authenticated" do
       it "returns unauthorized" do
-        post "/api/v1/time_buckets/templates",
+        post "/v1/time_buckets/templates",
              params: { granularity: '5y' }
 
         expect(response).to have_http_status(:unauthorized)
@@ -112,7 +112,7 @@ RSpec.describe "Api::V1::TimeBucketTemplates", type: :request do
       end
 
       it "fails due to overlapping buckets" do
-        post "/api/v1/time_buckets/templates",
+        post "/v1/time_buckets/templates",
              params: { granularity: '5y' },
              headers: auth_headers(session)
 
@@ -124,7 +124,7 @@ RSpec.describe "Api::V1::TimeBucketTemplates", type: :request do
 
     context "when buckets are positioned correctly" do
       it "assigns sequential positions" do
-        post "/api/v1/time_buckets/templates",
+        post "/v1/time_buckets/templates",
              params: { granularity: '5y' },
              headers: auth_headers(session)
 

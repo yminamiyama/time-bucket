@@ -1,7 +1,7 @@
 require 'swagger_helper'
 
 RSpec.describe 'api/v1/profile', type: :request do
-  path '/api/v1/profile' do
+  path '/v1/profile' do
     get('Get user profile') do
       tags 'Profile'
       description 'Retrieves the authenticated user profile information'

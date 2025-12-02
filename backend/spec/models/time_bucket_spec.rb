@@ -75,7 +75,7 @@ RSpec.describe TimeBucket, type: :model do
         bucket1 = create(:time_bucket, user: user, position: 1, start_age: 20, end_age: 29)
         bucket2 = create(:time_bucket, user: user, position: 2, start_age: 30, end_age: 39)
         
-        expect(TimeBucket.ordered).to eq([bucket1, bucket2, bucket3])
+        expect(user.time_buckets.ordered).to eq([bucket1, bucket2, bucket3])
       end
     end
 

@@ -4,9 +4,9 @@ RSpec.describe "Api::V1::Profile", type: :request do
   let(:user) { create(:user, birthdate: Date.new(1990, 5, 15), timezone: "Asia/Tokyo") }
   let(:session) { create(:session, user: user) }
 
-  describe "GET /api/v1/profile" do
+  describe "GET /v1/profile" do
     it "returns current user's profile" do
-      get "/api/v1/profile", headers: auth_headers(session)
+      get "/v1/profile", headers: auth_headers(session)
 
       expect(response).to have_http_status(:ok)
       body = JSON.parse(response.body)
@@ -20,18 +20,18 @@ RSpec.describe "Api::V1::Profile", type: :request do
     end
 
     it "returns unauthorized when not authenticated" do
-      get "/api/v1/profile"
+      get "/v1/profile"
 
       expect(response).to have_http_status(:unauthorized)
     end
   end
 
-  describe "PATCH /api/v1/profile" do
+  describe "PATCH /v1/profile" do
     context "with valid parameters" do
       it "updates birthdate and recalculates age" do
         new_birthdate = Date.new(1985, 3, 20)
         
-        patch "/api/v1/profile", 
+        patch "/v1/profile", 
               params: { profile: { birthdate: new_birthdate } },
               headers: auth_headers(session)
 
@@ -50,7 +50,7 @@ RSpec.describe "Api::V1::Profile", type: :request do
       end
 
       it "updates timezone" do
-        patch "/api/v1/profile", 
+        patch "/v1/profile", 
               params: { profile: { timezone: "America/New_York" } },
               headers: auth_headers(session)
 
@@ -66,7 +66,7 @@ RSpec.describe "Api::V1::Profile", type: :request do
       it "updates values_tags" do
         new_tags = { "adventure" => "true", "family" => "true" }
         
-        patch "/api/v1/profile", 
+        patch "/v1/profile", 
               params: { profile: { values_tags: new_tags } },
               headers: auth_headers(session)
 
@@ -82,7 +82,7 @@ RSpec.describe "Api::V1::Profile", type: :request do
 
     context "with invalid parameters" do
       it "returns error for invalid birthdate (too young)" do
-        patch "/api/v1/profile", 
+        patch "/v1/profile", 
               params: { profile: { birthdate: 10.years.ago.to_date } },
               headers: auth_headers(session)
 
@@ -94,7 +94,7 @@ RSpec.describe "Api::V1::Profile", type: :request do
       end
 
       it "returns error for invalid birthdate (too old)" do
-        patch "/api/v1/profile", 
+        patch "/v1/profile", 
               params: { profile: { birthdate: 120.years.ago.to_date } },
               headers: auth_headers(session)
 
@@ -106,7 +106,7 @@ RSpec.describe "Api::V1::Profile", type: :request do
       end
 
       it "returns error for blank birthdate" do
-        patch "/api/v1/profile", 
+        patch "/v1/profile", 
               params: { profile: { birthdate: nil } },
               headers: auth_headers(session)
 
@@ -119,7 +119,7 @@ RSpec.describe "Api::V1::Profile", type: :request do
 
     context "when not authenticated" do
       it "returns unauthorized" do
-        patch "/api/v1/profile", 
+        patch "/v1/profile", 
               params: { profile: { birthdate: Date.new(1985, 3, 20) } }
 
         expect(response).to have_http_status(:unauthorized)
@@ -131,7 +131,7 @@ RSpec.describe "Api::V1::Profile", type: :request do
         original_timezone = user.timezone
         new_birthdate = Date.new(1988, 7, 10)
         
-        patch "/api/v1/profile", 
+        patch "/v1/profile", 
               params: { profile: { birthdate: new_birthdate } },
               headers: auth_headers(session)
 

@@ -7,10 +7,10 @@ RSpec.describe "Api::V1::Dashboard Review Completed", type: :request do
   let!(:bucket_30s) { create(:time_bucket, user: user, label: "30s", start_age: 30, end_age: 39) }
   let!(:bucket_40s) { create(:time_bucket, user: user, label: "40s", start_age: 40, end_age: 49) }
 
-  describe "GET /api/v1/dashboard/review-completed" do
+  describe "GET /v1/dashboard/review-completed" do
     context "when user has no completed items" do
       it "returns empty completion data" do
-        get "/api/v1/dashboard/review-completed", headers: auth_headers(session)
+        get "/v1/dashboard/review-completed", headers: auth_headers(session)
 
         expect(response).to have_http_status(:ok)
         json = JSON.parse(response.body)
@@ -39,7 +39,7 @@ RSpec.describe "Api::V1::Dashboard Review Completed", type: :request do
       end
 
       it "returns correct completion stats and cost" do
-        get "/api/v1/dashboard/review-completed", headers: auth_headers(session)
+        get "/v1/dashboard/review-completed", headers: auth_headers(session)
 
         expect(response).to have_http_status(:ok)
         json = JSON.parse(response.body)
@@ -50,7 +50,7 @@ RSpec.describe "Api::V1::Dashboard Review Completed", type: :request do
       end
 
       it "calculates category-wise achievement rates correctly" do
-        get "/api/v1/dashboard/review-completed", headers: auth_headers(session)
+        get "/v1/dashboard/review-completed", headers: auth_headers(session)
 
         json = JSON.parse(response.body)
         category_achievements = json["category_achievements"]
@@ -72,7 +72,7 @@ RSpec.describe "Api::V1::Dashboard Review Completed", type: :request do
       end
 
       it "includes bucket-wise completion data with cumulative costs" do
-        get "/api/v1/dashboard/review-completed", headers: auth_headers(session)
+        get "/v1/dashboard/review-completed", headers: auth_headers(session)
 
         json = JSON.parse(response.body)
         bucket_completions = json["bucket_completions"]
@@ -98,7 +98,7 @@ RSpec.describe "Api::V1::Dashboard Review Completed", type: :request do
       end
 
       it "returns completed items with correct attributes" do
-        get "/api/v1/dashboard/review-completed", headers: auth_headers(session)
+        get "/v1/dashboard/review-completed", headers: auth_headers(session)
 
         json = JSON.parse(response.body)
         items = json["items"]
@@ -126,7 +126,7 @@ RSpec.describe "Api::V1::Dashboard Review Completed", type: :request do
       end
 
       it "returns 0 achievement rate for categories with no items" do
-        get "/api/v1/dashboard/review-completed", headers: auth_headers(session)
+        get "/v1/dashboard/review-completed", headers: auth_headers(session)
 
         json = JSON.parse(response.body)
         category_achievements = json["category_achievements"]
@@ -150,7 +150,7 @@ RSpec.describe "Api::V1::Dashboard Review Completed", type: :request do
       end
 
       it "returns only current user's completed items" do
-        get "/api/v1/dashboard/review-completed", headers: auth_headers(session)
+        get "/v1/dashboard/review-completed", headers: auth_headers(session)
 
         json = JSON.parse(response.body)
         
@@ -162,7 +162,7 @@ RSpec.describe "Api::V1::Dashboard Review Completed", type: :request do
 
     context "when user is not authenticated" do
       it "returns unauthorized" do
-        get "/api/v1/dashboard/review-completed"
+        get "/v1/dashboard/review-completed"
 
         expect(response).to have_http_status(:unauthorized)
       end

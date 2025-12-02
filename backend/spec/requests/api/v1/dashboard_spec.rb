@@ -8,10 +8,10 @@ RSpec.describe 'Api::V1::Dashboard', type: :request do
   let!(:bucket1) { create(:time_bucket, user: user, label: '30s', start_age: 30, end_age: 39, position: 0) }
   let!(:bucket2) { create(:time_bucket, user: user, label: '40s', start_age: 40, end_age: 49, position: 1) }
 
-  describe 'GET /api/v1/dashboard/summary' do
+  describe 'GET /v1/dashboard/summary' do
     context 'when authenticated' do
       it 'returns dashboard summary with empty data' do
-        get '/api/v1/dashboard/summary', headers: auth_headers(session)
+        get '/v1/dashboard/summary', headers: auth_headers(session)
 
         expect(response).to have_http_status(:ok)
         json = JSON.parse(response.body)
@@ -39,7 +39,7 @@ RSpec.describe 'Api::V1::Dashboard', type: :request do
         create(:bucket_item, time_bucket: bucket1, target_year: 2021, cost_estimate: 2000)
         create(:bucket_item, time_bucket: bucket2, target_year: 2030, cost_estimate: 500)
 
-        get '/api/v1/dashboard/summary', headers: auth_headers(session)
+        get '/v1/dashboard/summary', headers: auth_headers(session)
 
         expect(response).to have_http_status(:ok)
         json = JSON.parse(response.body)
@@ -63,7 +63,7 @@ RSpec.describe 'Api::V1::Dashboard', type: :request do
         create(:bucket_item, :career, time_bucket: bucket1, target_year: 2022)
         create(:bucket_item, :family, time_bucket: bucket2, target_year: 2030)
 
-        get '/api/v1/dashboard/summary', headers: auth_headers(session)
+        get '/v1/dashboard/summary', headers: auth_headers(session)
 
         expect(response).to have_http_status(:ok)
         json = JSON.parse(response.body)
@@ -97,7 +97,7 @@ RSpec.describe 'Api::V1::Dashboard', type: :request do
         create(:bucket_item, :done, time_bucket: bucket2, target_year: 2030)
         create(:bucket_item, :done, time_bucket: bucket2, target_year: 2031)
 
-        get '/api/v1/dashboard/summary', headers: auth_headers(session)
+        get '/v1/dashboard/summary', headers: auth_headers(session)
 
         expect(response).to have_http_status(:ok)
         json = JSON.parse(response.body)
@@ -111,7 +111,7 @@ RSpec.describe 'Api::V1::Dashboard', type: :request do
       end
 
       it 'handles buckets with no items' do
-        get '/api/v1/dashboard/summary', headers: auth_headers(session)
+        get '/v1/dashboard/summary', headers: auth_headers(session)
 
         expect(response).to have_http_status(:ok)
         json = JSON.parse(response.body)
@@ -127,7 +127,7 @@ RSpec.describe 'Api::V1::Dashboard', type: :request do
 
         create(:bucket_item, time_bucket: bucket1, target_year: 2020)
 
-        get '/api/v1/dashboard/summary', headers: auth_headers(session)
+        get '/v1/dashboard/summary', headers: auth_headers(session)
 
         expect(response).to have_http_status(:ok)
         json = JSON.parse(response.body)
@@ -139,7 +139,7 @@ RSpec.describe 'Api::V1::Dashboard', type: :request do
 
     context 'when not authenticated' do
       it 'returns 401 unauthorized' do
-        get '/api/v1/dashboard/summary'
+        get '/v1/dashboard/summary'
 
         expect(response).to have_http_status(:unauthorized)
       end

@@ -1,7 +1,7 @@
 require 'swagger_helper'
 
 RSpec.describe 'api/v1/time_buckets/{time_bucket_id}/bucket_items', type: :request do
-  path '/api/v1/time_buckets/{time_bucket_id}/bucket_items' do
+  path '/v1/time_buckets/{time_bucket_id}/bucket_items' do
     parameter name: :time_bucket_id, in: :path, type: :integer, description: 'Time bucket ID'
 
     get('List bucket items') do
@@ -179,7 +179,7 @@ RSpec.describe 'api/v1/time_buckets/{time_bucket_id}/bucket_items', type: :reque
     end
   end
 
-  path '/api/v1/bucket_items/{id}' do
+  path '/v1/bucket_items/{id}' do
     parameter name: :id, in: :path, type: :integer, description: 'Bucket item ID'
 
     get('Show bucket item') do
@@ -389,7 +389,7 @@ RSpec.describe 'api/v1/time_buckets/{time_bucket_id}/bucket_items', type: :reque
     end
   end
 
-  path '/api/v1/bucket_items/{id}/complete' do
+  path '/v1/bucket_items/{id}/complete' do
     parameter name: :id, in: :path, type: :integer, description: 'Bucket item ID'
 
     patch('Mark bucket item as completed') do

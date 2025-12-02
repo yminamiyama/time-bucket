@@ -26,13 +26,13 @@ RSpec.describe "Api::V1::TimeBuckets", type: :request do
     }
   end
 
-  describe "GET /api/v1/time_buckets" do
+  describe "GET /v1/time_buckets" do
     context "when authenticated" do
       it "returns user's time buckets only" do
         create_list(:time_bucket, 3, user: user)
         create_list(:time_bucket, 2, user: other_user)
         
-        get "/api/v1/time_buckets", headers: auth_headers(session)
+        get "/v1/time_buckets", headers: auth_headers(session)
         
         expect(response).to have_http_status(:success)
         json = JSON.parse(response.body)
@@ -44,7 +44,7 @@ RSpec.describe "Api::V1::TimeBuckets", type: :request do
         bucket2 = create(:time_bucket, user: user, position: 0)
         bucket3 = create(:time_bucket, user: user, position: 1)
         
-        get "/api/v1/time_buckets", headers: auth_headers(session)
+        get "/v1/time_buckets", headers: auth_headers(session)
         
         json = JSON.parse(response.body)
         expect(json.map { |b| b['id'] }).to eq([bucket2.id, bucket3.id, bucket1.id])
@@ -53,18 +53,18 @@ RSpec.describe "Api::V1::TimeBuckets", type: :request do
     
     context 'when not authenticated' do
       it 'returns 401' do
-        get '/api/v1/time_buckets'
+        get '/v1/time_buckets'
         expect(response).to have_http_status(:unauthorized)
       end
     end
   end
 
-  describe "GET /api/v1/time_buckets/:id" do
+  describe "GET /v1/time_buckets/:id" do
     let(:time_bucket) { create(:time_bucket, user: user) }
     
     context "when authenticated" do
       it "returns the time bucket" do
-        get "/api/v1/time_buckets/#{time_bucket.id}", headers: auth_headers(session)
+        get "/v1/time_buckets/#{time_bucket.id}", headers: auth_headers(session)
         
         expect(response).to have_http_status(:success)
         json = JSON.parse(response.body)
@@ -77,24 +77,24 @@ RSpec.describe "Api::V1::TimeBuckets", type: :request do
       let(:other_bucket) { create(:time_bucket, user: other_user) }
       
       it "returns 404" do
-        get "/api/v1/time_buckets/#{other_bucket.id}", headers: auth_headers(session)
+        get "/v1/time_buckets/#{other_bucket.id}", headers: auth_headers(session)
         expect(response).to have_http_status(:not_found)
       end
     end
     
     context "when not authenticated" do
       it "returns 401" do
-        get "/api/v1/time_buckets/#{time_bucket.id}"
+        get "/v1/time_buckets/#{time_bucket.id}"
         expect(response).to have_http_status(:unauthorized)
       end
     end
   end
 
-  describe "POST /api/v1/time_buckets" do
+  describe "POST /v1/time_buckets" do
     context "with valid parameters" do
       it "creates a new time bucket" do
         expect {
-          post "/api/v1/time_buckets",
+          post "/v1/time_buckets",
                params: { time_bucket: valid_attributes },
                headers: auth_headers(session)
         }.to change(TimeBucket, :count).by(1)
@@ -107,7 +107,7 @@ RSpec.describe "Api::V1::TimeBuckets", type: :request do
     
     context "with invalid parameters" do
       it "returns unprocessable entity" do
-        post "/api/v1/time_buckets",
+        post "/v1/time_buckets",
              params: { time_bucket: invalid_attributes },
              headers: auth_headers(session)
         
@@ -119,19 +119,19 @@ RSpec.describe "Api::V1::TimeBuckets", type: :request do
     
     context "when not authenticated" do
       it "returns 401" do
-        post "/api/v1/time_buckets", params: { time_bucket: valid_attributes }
+        post "/v1/time_buckets", params: { time_bucket: valid_attributes }
         expect(response).to have_http_status(:unauthorized)
       end
     end
   end
 
-  describe "PATCH /api/v1/time_buckets/:id" do
+  describe "PATCH /v1/time_buckets/:id" do
     let(:time_bucket) { create(:time_bucket, user: user) }
     let(:new_attributes) { { label: "Updated Label" } }
     
     context "with valid parameters" do
       it "updates the time bucket" do
-        patch "/api/v1/time_buckets/#{time_bucket.id}",
+        patch "/v1/time_buckets/#{time_bucket.id}",
               params: { time_bucket: new_attributes },
               headers: auth_headers(session)
         
@@ -143,7 +143,7 @@ RSpec.describe "Api::V1::TimeBuckets", type: :request do
     
     context "with invalid parameters" do
       it "returns unprocessable entity" do
-        patch "/api/v1/time_buckets/#{time_bucket.id}",
+        patch "/v1/time_buckets/#{time_bucket.id}",
               params: { time_bucket: { start_age: 100, end_age: 20 } },
               headers: auth_headers(session)
         
@@ -155,7 +155,7 @@ RSpec.describe "Api::V1::TimeBuckets", type: :request do
       let(:other_bucket) { create(:time_bucket, user: other_user) }
       
       it "returns 404" do
-        patch "/api/v1/time_buckets/#{other_bucket.id}",
+        patch "/v1/time_buckets/#{other_bucket.id}",
               params: { time_bucket: new_attributes },
               headers: auth_headers(session)
         
@@ -164,13 +164,13 @@ RSpec.describe "Api::V1::TimeBuckets", type: :request do
     end
   end
 
-  describe "DELETE /api/v1/time_buckets/:id" do
+  describe "DELETE /v1/time_buckets/:id" do
     let!(:time_bucket) { create(:time_bucket, user: user) }
     
     context "when authenticated" do
       it "destroys the time bucket" do
         expect {
-          delete "/api/v1/time_buckets/#{time_bucket.id}", headers: auth_headers(session)
+          delete "/v1/time_buckets/#{time_bucket.id}", headers: auth_headers(session)
         }.to change(TimeBucket, :count).by(-1)
         
         expect(response).to have_http_status(:no_content)
@@ -182,7 +182,7 @@ RSpec.describe "Api::V1::TimeBuckets", type: :request do
       
       it "returns 404" do
         expect {
-          delete "/api/v1/time_buckets/#{other_bucket.id}", headers: auth_headers(session)
+          delete "/v1/time_buckets/#{other_bucket.id}", headers: auth_headers(session)
         }.not_to change(TimeBucket, :count)
         
         expect(response).to have_http_status(:not_found)

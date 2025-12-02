@@ -1,7 +1,7 @@
 require 'swagger_helper'
 
 RSpec.describe 'api/v1/time_buckets', type: :request do
-  path '/api/v1/time_buckets' do
+  path '/v1/time_buckets' do
     get('List time buckets') do
       tags 'Time Buckets'
       description 'Retrieves all time buckets for the authenticated user, ordered by position'
@@ -120,7 +120,7 @@ RSpec.describe 'api/v1/time_buckets', type: :request do
     end
   end
 
-  path '/api/v1/time_buckets/{id}' do
+  path '/v1/time_buckets/{id}' do
     parameter name: :id, in: :path, type: :integer, description: 'Time bucket ID'
 
     get('Show time bucket') do

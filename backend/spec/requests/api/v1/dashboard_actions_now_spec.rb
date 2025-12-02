@@ -4,10 +4,10 @@ RSpec.describe "Api::V1::Dashboard Actions Now", type: :request do
   let(:user) { create(:user, birthdate: Date.new(1990, 1, 1)) }
   let(:session) { create(:session, user: user) }
 
-  describe "GET /api/v1/dashboard/actions-now" do
+  describe "GET /v1/dashboard/actions-now" do
     context "when user has no bucket items" do
       it "returns empty items array with metadata" do
-        get "/api/v1/dashboard/actions-now", headers: auth_headers(session)
+        get "/v1/dashboard/actions-now", headers: auth_headers(session)
 
         expect(response).to have_http_status(:ok)
         body = JSON.parse(response.body)
@@ -71,7 +71,7 @@ RSpec.describe "Api::V1::Dashboard Actions Now", type: :request do
       end
 
       it "returns only overdue and approaching items, sorted by years_until" do
-        get "/api/v1/dashboard/actions-now", headers: auth_headers(session)
+        get "/v1/dashboard/actions-now", headers: auth_headers(session)
 
         expect(response).to have_http_status(:ok)
         body = JSON.parse(response.body)
@@ -91,7 +91,7 @@ RSpec.describe "Api::V1::Dashboard Actions Now", type: :request do
       end
 
       it "includes all required fields for each item" do
-        get "/api/v1/dashboard/actions-now", headers: auth_headers(session)
+        get "/v1/dashboard/actions-now", headers: auth_headers(session)
 
         body = JSON.parse(response.body)
         item = body["items"].first
@@ -134,7 +134,7 @@ RSpec.describe "Api::V1::Dashboard Actions Now", type: :request do
       end
 
       it "returns only current user's items" do
-        get "/api/v1/dashboard/actions-now", headers: auth_headers(session)
+        get "/v1/dashboard/actions-now", headers: auth_headers(session)
 
         expect(response).to have_http_status(:ok)
         body = JSON.parse(response.body)
@@ -147,7 +147,7 @@ RSpec.describe "Api::V1::Dashboard Actions Now", type: :request do
 
     context "when not authenticated" do
       it "returns unauthorized error" do
-        get "/api/v1/dashboard/actions-now"
+        get "/v1/dashboard/actions-now"
 
         expect(response).to have_http_status(:unauthorized)
       end

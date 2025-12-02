@@ -4,10 +4,10 @@ RSpec.describe "Api::V1::NotificationSettings", type: :request do
   let(:user) { create(:user) }
   let(:session) { create(:session, user: user) }
 
-  describe "GET /api/v1/notification-settings" do
+  describe "GET /v1/notification-settings" do
     context "when user has no settings yet" do
       it "returns default notification settings" do
-        get "/api/v1/notification-settings", headers: auth_headers(session)
+        get "/v1/notification-settings", headers: auth_headers(session)
 
         expect(response).to have_http_status(:ok)
         json = JSON.parse(response.body)
@@ -31,7 +31,7 @@ RSpec.describe "Api::V1::NotificationSettings", type: :request do
       end
 
       it "returns user's notification settings" do
-        get "/api/v1/notification-settings", headers: auth_headers(session)
+        get "/v1/notification-settings", headers: auth_headers(session)
 
         expect(response).to have_http_status(:ok)
         json = JSON.parse(response.body)
@@ -46,17 +46,17 @@ RSpec.describe "Api::V1::NotificationSettings", type: :request do
 
     context "when user is not authenticated" do
       it "returns unauthorized" do
-        get "/api/v1/notification-settings"
+        get "/v1/notification-settings"
 
         expect(response).to have_http_status(:unauthorized)
       end
     end
   end
 
-  describe "PATCH /api/v1/notification-settings" do
+  describe "PATCH /v1/notification-settings" do
     context "when updating email_enabled" do
       it "updates email notification preference" do
-        patch "/api/v1/notification-settings", 
+        patch "/v1/notification-settings", 
               params: { email_enabled: false },
               headers: auth_headers(session)
 
@@ -70,7 +70,7 @@ RSpec.describe "Api::V1::NotificationSettings", type: :request do
 
     context "when updating slack_webhook_url" do
       it "updates slack webhook URL" do
-        patch "/api/v1/notification-settings", 
+        patch "/v1/notification-settings", 
               params: { slack_webhook_url: "https://hooks.slack.com/services/test" },
               headers: auth_headers(session)
 
@@ -81,7 +81,7 @@ RSpec.describe "Api::V1::NotificationSettings", type: :request do
       end
 
       it "rejects invalid URL format" do
-        patch "/api/v1/notification-settings", 
+        patch "/v1/notification-settings", 
               params: { slack_webhook_url: "not-a-valid-url" },
               headers: auth_headers(session)
 
@@ -94,7 +94,7 @@ RSpec.describe "Api::V1::NotificationSettings", type: :request do
 
     context "when updating digest_time" do
       it "updates digest time" do
-        patch "/api/v1/notification-settings", 
+        patch "/v1/notification-settings", 
               params: { digest_time: "14:30" },
               headers: auth_headers(session)
 
@@ -105,7 +105,7 @@ RSpec.describe "Api::V1::NotificationSettings", type: :request do
       end
 
       it "rejects invalid time format" do
-        patch "/api/v1/notification-settings", 
+        patch "/v1/notification-settings", 
               params: { digest_time: "25:00" },
               headers: auth_headers(session)
 
@@ -116,7 +116,7 @@ RSpec.describe "Api::V1::NotificationSettings", type: :request do
       end
 
       it "rejects invalid time format with letters" do
-        patch "/api/v1/notification-settings", 
+        patch "/v1/notification-settings", 
               params: { digest_time: "noon" },
               headers: auth_headers(session)
 
@@ -126,7 +126,7 @@ RSpec.describe "Api::V1::NotificationSettings", type: :request do
 
     context "when updating event preferences" do
       it "updates event notification preferences" do
-        patch "/api/v1/notification-settings", 
+        patch "/v1/notification-settings", 
               params: { events: { bucket_item_due: true, weekly_digest: false, completion_reminder: true } },
               headers: auth_headers(session)
 
@@ -141,7 +141,7 @@ RSpec.describe "Api::V1::NotificationSettings", type: :request do
 
     context "when updating multiple fields at once" do
       it "updates all specified fields" do
-        patch "/api/v1/notification-settings", 
+        patch "/v1/notification-settings", 
               params: { 
                 email_enabled: false,
                 slack_webhook_url: "https://hooks.slack.com/new",
@@ -162,7 +162,7 @@ RSpec.describe "Api::V1::NotificationSettings", type: :request do
 
     context "when user is not authenticated" do
       it "returns unauthorized" do
-        patch "/api/v1/notification-settings", 
+        patch "/v1/notification-settings", 
               params: { email_enabled: false }
 
         expect(response).to have_http_status(:unauthorized)
@@ -178,7 +178,7 @@ RSpec.describe "Api::V1::NotificationSettings", type: :request do
       end
 
       it "allows clearing the webhook URL" do
-        patch "/api/v1/notification-settings", 
+        patch "/v1/notification-settings", 
               params: { slack_webhook_url: "" },
               headers: auth_headers(session)
 

@@ -1,10 +1,26 @@
 import { getInitialData } from "@/services/mockDataService";
 import { BucketItem, TimeBucket, UserProfile, Difficulty, RiskLevel, ItemStatus } from "@/types";
 
-// Use mock when explicitly enabled, or when not specified in non-production
-export const USE_MOCK =
-  process.env.NEXT_PUBLIC_USE_MOCK === "true" ||
-  (!process.env.NEXT_PUBLIC_USE_MOCK && process.env.NODE_ENV !== "production");
+// Demo/Mock 判定をランタイムで行う
+// 環境変数で明示的に true → 常にモック
+// 非 production で env 未設定 → デフォルトでモック
+// localStorage のフラグ or ?demo=1 で強制モック（本番でも可）
+export const isMockEnabled = (): boolean => {
+  if (process.env.NEXT_PUBLIC_USE_MOCK === "true") return true;
+  if (!process.env.NEXT_PUBLIC_USE_MOCK && process.env.NODE_ENV !== "production") return true;
+
+  if (typeof window === "undefined") return false;
+
+  // URL クエリでデモ起動
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("demo") === "1") {
+    window.localStorage.setItem("timebucket_demo_mode", "true");
+    return true;
+  }
+
+  const stored = window.localStorage.getItem("timebucket_demo_mode");
+  return stored === "true";
+};
 
 // API_BASE_URL is the API prefix (default /v1). BACKEND_BASE_URL is the origin for auth redirects.
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "/v1";
@@ -330,4 +346,12 @@ const MockApiClient = {
   },
 };
 
-export const apiClient = USE_MOCK ? MockApiClient : RealApiClient;
+const selectClient = () => (isMockEnabled() ? MockApiClient : RealApiClient);
+
+export const apiClient = {
+  get: <T>(path: string) => selectClient().get<T>(path),
+  post: <T>(path: string, body: Partial<BucketItem>) => selectClient().post<T>(path, body),
+  patch: <T>(path: string, updates: Partial<BucketItem>) => selectClient().patch<T>(path, updates),
+  patchProfile: (body: Partial<UserProfile>) => selectClient().patchProfile(body),
+  delete: <T>(path: string) => selectClient().delete<T>(path),
+};

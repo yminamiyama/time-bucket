@@ -1,9 +1,11 @@
 "use client";
 
 import { BACKEND_BASE_URL, API_BASE_URL } from "@/lib/api-client";
-import { ShieldCheck, LogIn } from "lucide-react";
+import { ShieldCheck, LogIn, Eye } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const router = useRouter();
   // 認証エンドポイントは /auth/google_oauth2 (API prefixなし)
   const action = `${(BACKEND_BASE_URL || API_BASE_URL.replace(/\/v1$/, ""))}/auth/google_oauth2`;
 
@@ -29,6 +31,21 @@ export default function LoginPage() {
             Sign in with Google
           </button>
         </form>
+
+        <button
+          type="button"
+          onClick={() => {
+            if (typeof window !== "undefined") {
+              window.localStorage.setItem("timebucket_demo_mode", "true");
+              window.dispatchEvent(new Event("timebucket-demo-toggle"));
+            }
+            router.push("/");
+          }}
+          className="w-full flex items-center justify-center gap-2 border border-primary/40 text-primary py-3 rounded-xl font-semibold hover:bg-primary/5 transition-colors shadow-sm"
+        >
+          <Eye size={18} />
+          デモモードで見る
+        </button>
 
         <p className="text-xs text-muted-foreground text-center">
           サインインすると、バックエンドの認証エンドポイントへリダイレクトします。

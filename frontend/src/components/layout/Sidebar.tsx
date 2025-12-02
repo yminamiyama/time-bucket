@@ -53,6 +53,10 @@ export function Sidebar({ className }: { className?: string }) {
     } catch (e) {
       console.error("Logout failed", e);
     } finally {
+      if (typeof window !== "undefined") {
+        window.localStorage.removeItem("timebucket_demo_mode");
+        window.dispatchEvent(new Event("timebucket-demo-toggle"));
+      }
       window.location.href = "/login";
     }
   };

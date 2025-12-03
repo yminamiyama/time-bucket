@@ -23,7 +23,7 @@ export default function BucketListPage() {
 
   const formatYen = (amount: number) => `¥${amount.toLocaleString()}`;
 
-  // デフォルト選択: 現在の年齢を含むチャプター → 未来で最も近い → 最後
+  // デフォルト選択: 現在の年齢を含むバケット → 未来で最も近い → 最後
   const defaultBucketId = React.useMemo(() => {
     if (!user || buckets.length === 0) return null;
     const age = user.currentAge;

@@ -227,11 +227,15 @@ export default function BucketListPage() {
                             </div>
                           </div>
 
-                          <p className="text-muted-foreground text-sm mt-1">{item.description}</p>
+                          {item.description && (
+                            <p className="text-muted-foreground text-sm mt-1 whitespace-pre-line">{item.description}</p>
+                          )}
 
-                          <div className="mt-3 bg-secondary p-3 rounded-lg text-sm text-muted-foreground italic border">
-                            {item.valueStatement}
-                          </div>
+                          {item.valueStatement && (
+                            <div className="mt-3 bg-secondary p-3 rounded-lg text-sm text-muted-foreground italic border">
+                              {item.valueStatement}
+                            </div>
+                          )}
 
                           <div className="flex flex-wrap items-center gap-3 mt-4 text-xs text-muted-foreground">
                             <span className={cn("flex items-center gap-1 px-2 py-1 rounded", CATEGORY_CONFIG[item.category].bg, CATEGORY_CONFIG[item.category].color)}>

@@ -19,6 +19,7 @@ export function BucketItemDialog({ open, onOpenChange, onSubmit, defaultTargetYe
   const [formData, setFormData] = useState({
     title: "",
     valueStatement: "",
+    description: "",
     category: Category.LEISURE,
     difficulty: Difficulty.MEDIUM,
     riskLevel: RiskLevel.LOW,
@@ -33,6 +34,7 @@ export function BucketItemDialog({ open, onOpenChange, onSubmit, defaultTargetYe
         setFormData({
           title: item.title,
           valueStatement: item.valueStatement ?? "",
+          description: item.description ?? "",
           category: item.category,
           difficulty: item.difficulty,
           riskLevel: item.riskLevel,
@@ -44,6 +46,7 @@ export function BucketItemDialog({ open, onOpenChange, onSubmit, defaultTargetYe
           ...prev,
           title: "",
           valueStatement: "",
+          description: "",
           category: Category.LEISURE,
           difficulty: Difficulty.MEDIUM,
           riskLevel: RiskLevel.LOW,
@@ -135,10 +138,22 @@ export function BucketItemDialog({ open, onOpenChange, onSubmit, defaultTargetYe
               placeholder="なぜこれをやりたい？どんな思い出（配当）になる？"
               value={formData.valueStatement}
               onChange={handleChange}
-              className="flex min-h-[60px] w-full rounded-md border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            />
-            {formError && <p className="text-xs text-destructive">{formError}</p>}
-          </div>
+          className="flex min-h-[60px] w-full rounded-md border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        />
+        {formError && <p className="text-xs text-destructive">{formError}</p>}
+      </div>
+
+      <div className="space-y-1">
+        <label className="text-sm font-medium">詳細・メモ</label>
+        <textarea
+          name="description"
+          rows={3}
+          placeholder="補足情報やメモを自由に書いてください。"
+          value={formData.description}
+          onChange={handleChange}
+          className="flex min-h-[72px] w-full rounded-md border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        />
+      </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">

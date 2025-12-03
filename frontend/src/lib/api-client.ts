@@ -37,6 +37,7 @@ type ApiBucketItem = {
   status: BucketItem["status"];
   target_year: number;
   value_statement: string;
+  description?: string | null;
   completed_at?: string | null;
   created_at?: string;
   updated_at?: string;
@@ -112,7 +113,7 @@ const mapBucketItem = (apiItem: ApiBucketItem): BucketItem => ({
   status: apiItem.status,
   targetYear: apiItem.target_year,
   valueStatement: apiItem.value_statement,
-  description: apiItem.value_statement || "",
+  description: apiItem.description ?? "",
   completedAt: apiItem.completed_at || undefined,
   createdAt: apiItem.created_at,
   updatedAt: apiItem.updated_at,
@@ -204,6 +205,7 @@ const RealApiClient = {
         status: body.status,
         target_year: body.targetYear,
         value_statement: body.valueStatement,
+        description: body.description,
       };
 
       const data = await fetchJson<ApiBucketItem>(
@@ -233,6 +235,7 @@ const RealApiClient = {
       if (body.costEstimate !== undefined) apiBody.cost_estimate = body.costEstimate;
       if (body.targetYear) apiBody.target_year = body.targetYear;
       if (body.valueStatement) apiBody.value_statement = body.valueStatement;
+      if (body.description !== undefined) apiBody.description = body.description;
       if (body.completedAt !== undefined) apiBody.completed_at = body.completedAt;
 
       const data = await fetchJson<ApiBucketItem>(
@@ -293,7 +296,7 @@ const MockApiClient = {
       status: (body.status as ItemStatus) || ItemStatus.PLANNED,
       targetYear: body.targetYear ?? new Date().getFullYear(),
       valueStatement: body.valueStatement || "",
-      description: body.valueStatement || "",
+      description: body.description ?? "",
       tags: [],
     };
 

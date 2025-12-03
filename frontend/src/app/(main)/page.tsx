@@ -37,7 +37,7 @@ export default function DashboardPage() {
       (b) => user.currentAge >= b.startAge && user.currentAge <= b.endAge
     );
     if (match) return match.label;
-    // fallback: 直近の将来チャプター or 最後のチャプター
+    // fallback: 直近の将来バケット or 最後のバケット
     const future = buckets.find((b) => b.startAge > user.currentAge);
     return future?.label || buckets[buckets.length - 1]?.label || "-";
   }, [buckets, user]);

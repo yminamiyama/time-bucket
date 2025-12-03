@@ -23,7 +23,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
       <Sidebar className="hidden md:flex" />
 
       <div className="md:hidden bg-white border-b p-4 flex justify-between items-center sticky top-0 z-20">
-        <span className="font-bold text-lg text-brand-600">TimeBucket</span>
+        <span className="font-bold text-lg text-brand-600">LifeChapters</span>
         <button className="p-2 text-slate-600">
           <LayoutDashboard />
         </button>

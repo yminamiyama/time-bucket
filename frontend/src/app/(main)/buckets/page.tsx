@@ -203,7 +203,7 @@ export default function BucketListPage() {
                             <h3 className={cn("font-bold text-lg", isDone ? "text-muted-foreground line-through" : "text-foreground")}>
                               {item.title}
                             </h3>
-                            <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="flex items-center gap-2 md:opacity-0 group-hover:opacity-100 transition-opacity">
                               <button
                                 onClick={() => {
                                   setEditingItem(item);
